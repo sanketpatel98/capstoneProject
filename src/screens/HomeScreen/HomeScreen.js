@@ -74,7 +74,7 @@ export default function HomeScreen({ navigation }) {
           />
           <TouchableOpacity>
             <Image
-              source={require("../../assets/image/setting.png")}
+              source={require("../../assets/image/settings-black.png")}
               style={styles.topIcon}
             />
           </TouchableOpacity>

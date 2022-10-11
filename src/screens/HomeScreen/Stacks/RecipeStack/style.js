@@ -19,10 +19,10 @@ const styles = StyleSheet.create({
     flex: 3,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.white,
   },
   recipeDescriptionTitleView: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.white,
     width: Dimensions.get("window").width,
     paddingHorizontal: 50,
     marginTop: -50,
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     minHeight: 100
   },
   recipeDescriptionTitleText: {
-    color: COLORS.white,
+    color: COLORS.black,
     fontSize: SIZES.large,
     fontWeight: 'bold'
   },

@@ -17,6 +17,9 @@ export default function Recipe({ route, navigation }) {
         <View style={styles.recipeDescriptionTitleView}>
           <Text numberOfLines={2} style={styles.recipeDescriptionTitleText}>{route.params.item.title}</Text>
         </View>
+        <View>
+          
+        </View>
       </View>
 
       <StatusBar style="auto" />
