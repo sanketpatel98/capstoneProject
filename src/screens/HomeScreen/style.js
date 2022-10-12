@@ -6,8 +6,8 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   topIcon: {
-    width: 45,
-    height: 45,
+    width: 35,
+    height: 35,
   },
   topContainer: {
     justifyContent: "space-between",
@@ -27,18 +27,18 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontSize: SIZES.extraLarge,
-    color: COLORS.white,
+    color: COLORS.black,
     fontWeight: "bold",
     fontStyle: 'italic'
   },
   container: {
     paddingTop: 10,
-    backgroundColor: "black",
+    backgroundColor: COLORS.white,
     alignItems: "center",
     justifyContent: "center",
   },
   recipeContainer: {
-    borderColor: "black",
+    borderColor: COLORS.black,
     // borderWidth: 2,
     borderRadius: 10,
     margin: 6,
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   listTitle: {
     fontWeight: "bold",
     fontSize: SIZES.extraLarge,
-    color: COLORS.white,
+    color: COLORS.black,
     marginBottom:10
   },
   descriptionContainer: {
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   descriptionText: {
-    color: COLORS.white,
+    color: COLORS.black,
     fontSize: SIZES.small,
   },
 });
