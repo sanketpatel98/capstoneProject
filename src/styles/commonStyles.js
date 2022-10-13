@@ -14,6 +14,8 @@ export const COLORS = {
   white: "#ffffff",
   black: "#000000",
   gray: "#74858C",
+  lightGreen: '#F0FBDC',
+  darkGreen: '#2B4625'
 };
 
 export const SHADOWS = {
