@@ -92,6 +92,7 @@ export default function HomeScreen({ navigation }) {
           horizontal={true}
           ListFooterComponent={listFooterItem}
           style={styles.listContainer}
+          showsHorizontalScrollIndicator={false}
         />
 
         <StatusBar style="auto" />
