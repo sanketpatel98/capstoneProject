@@ -61,7 +61,7 @@ export default function App() {
           name="Settings"
           component={SettingScreen}
           options={{ headerShown: false,
-            tabBarLabel: 'Home',
+            tabBarLabel: 'Settings',
             tabBarIcon: ({ color, size }) => (
               <MaterialCommunityIcons name="cog" color={color} size={size} />
             ), }}
