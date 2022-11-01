@@ -1,25 +1,27 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useEffect } from "react";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import HomeScreen from "./src/screens/HomeScreen/HomeScreen";
+import Recipe from "./src/screens/HomeScreen/Stacks/RecipeStack/Recipe";
 import SearchScreen from "./src/screens/SearchScreen/SearchScreen";
 import SettingScreen from "./src/screens/SettingsScreen/SettingsScreen";
-import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import styles from "./style";
-import Recipe from "./src/screens/HomeScreen/Stacks/RecipeStack/Recipe";
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 export default function App() {
+  useEffect(() => {
+    // getRecipebyPantry()
+    
+  }, []);
 
   const MyTheme = {
     ...DefaultTheme,
     colors: {
       ...DefaultTheme.colors,
-      primary: 'red',
+      primary: "red",
     },
   };
 
@@ -28,8 +30,16 @@ export default function App() {
   function HomeStackScreen() {
     return (
       <HomeStack.Navigator>
-        <HomeStack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
-        <HomeStack.Screen name="Recipe" component={Recipe} options={{ headerShown: false }} />
+        <HomeStack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ headerShown: false }}
+        />
+        <HomeStack.Screen
+          name="Recipe"
+          component={Recipe}
+          options={{ headerShown: false }}
+        />
       </HomeStack.Navigator>
     );
   }
@@ -42,7 +52,7 @@ export default function App() {
           component={HomeStackScreen}
           options={{
             headerShown: false,
-            tabBarLabel: 'Home',
+            tabBarLabel: "Home",
             tabBarIcon: ({ color, size }) => (
               <MaterialCommunityIcons name="home" color={color} size={size} />
             ),
@@ -51,23 +61,30 @@ export default function App() {
         <Tab.Screen
           name="Search"
           component={SearchScreen}
-          options={{ headerShown: false,
-            tabBarLabel: 'Search',
+          options={{
+            headerShown: false,
+            tabBarLabel: "Search",
             tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons name="magnify" color={color} size={size} />
-            ), }}
+              <MaterialCommunityIcons
+                name="magnify"
+                color={color}
+                size={size}
+              />
+            ),
+          }}
         />
         <Tab.Screen
           name="Settings"
           component={SettingScreen}
-          options={{ headerShown: false,
-            tabBarLabel: 'Settings',
+          options={{
+            headerShown: false,
+            tabBarLabel: "Settings",
             tabBarIcon: ({ color, size }) => (
               <MaterialCommunityIcons name="cog" color={color} size={size} />
-            ), }}
+            ),
+          }}
         />
       </Tab.Navigator>
     </NavigationContainer>
   );
 }
-

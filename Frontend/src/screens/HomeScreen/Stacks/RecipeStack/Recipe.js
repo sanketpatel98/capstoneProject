@@ -1,19 +1,43 @@
-import styles from './style'
+import { useEffect, useState } from 'react'
 import {
-  Text,
-  View,
-  ImageBackground,
-  FlatList,
-  TouchableOpacity,
-  ScrollView,
-  StatusBar
+  FlatList, ImageBackground, ScrollView,
+  StatusBar, Text, TouchableOpacity, View
 } from 'react-native'
-// import { StatusBar } from 'expo-status-bar'
-import { CircleButton } from '../../../../components/CircleButton'
 import heart from '../../../../assets/image/heart.png'
 import back from '../../../../assets/image/left.png'
+import { getRecipeById, getRecipeInstructionById } from '../../../../backendCalls/recipeData'
+import { CircleButton } from '../../../../components/CircleButton'
+import styles from './style'
 
 export default function Recipe({ route, navigation }) {
+
+  const [recipe, setRecipe] = useState([])
+  const [recipeInstructions, setRecipeInstructions] = useState([])
+  const [readyInMinutes, setReadyInMinutes] = useState()
+
+  useEffect(()=>{
+
+    // getting recipe(for readyInMinutes)
+    getRecipeById(route.params.item.id)
+    .then((res) => {
+      console.log("getRecipeById RESPONSE SUCCESS");
+      setReadyInMinutes(res.readyInMinutes)
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+
+    // getting instructions 
+    getRecipeInstructionById(route.params.item.id)
+      .then((res) => {
+        console.log("getRecipeInstructionById RESPONSE SUCCESS");
+        setRecipeInstructions(res)
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  },[])
+
   const baseUrl = 'https://spoonacular.com/cdn/ingredients_500x500/'
   const renderItems = ({ item }) => (
     <TouchableOpacity
@@ -26,7 +50,7 @@ export default function Recipe({ route, navigation }) {
 
       <View style={styles.ingredientContainer}>
         <ImageBackground
-          source={{ uri: baseUrl + item.image }}
+          source={{ uri: item.image }}
           style={styles.ingredientImage}
           imageStyle={{ borderRadius: 14 }}
           resizeMode="cover"
@@ -42,6 +66,10 @@ export default function Recipe({ route, navigation }) {
     </TouchableOpacity>
   )
 
+
+  // return (<View style={{flex:1,alignItems:'center', justifyContent:'center'}}>
+  //   <Text>Hello</Text>
+  // </View>)
   return (
     <ScrollView style={styles.container} nestedScrollEnabled = {true}>
       <StatusBar hidden />
@@ -70,7 +98,7 @@ export default function Recipe({ route, navigation }) {
               {route.params.item.title}
             </Text>
             <Text style={styles.preprationTimeText}>
-              Time to prepare: {route.params.item.readyInMinutes} Minutes
+              Time to prepare: {readyInMinutes} Minutes
             </Text>
           </View>
           <View style={styles.ingredientContainerList}>
@@ -78,7 +106,7 @@ export default function Recipe({ route, navigation }) {
               Required Ingredients
             </Text>
             <FlatList
-              data={route.params.item.extendedIngredients}
+              data={route.params.item.usedIngredients.concat(route.params.item.missedIngredients)}
               renderItem={renderItems}
               keyExtractor={(item) => item.id}
               horizontal={true}
@@ -86,14 +114,15 @@ export default function Recipe({ route, navigation }) {
               showsHorizontalScrollIndicator={false}
             />
           </View>
-          <View style={styles.instructionView}>
+          { recipeInstructions.length != 0 && <View style={styles.instructionView}>
             <Text style={styles.instructionViewTitle}>INSTRUCTIONS</Text>
             <ScrollView style={styles.stepsScrollView} nestedScrollEnabled = {true} showsVerticalScrollIndicator={false}>
-              {route.params.item.analyzedInstructions[0].steps.map((step) => (
+              {recipeInstructions[0].steps.map((step) => (
                 <Text style={styles.stepsText} key={step.number}>{step.number}) {step.step}</Text>
               ))}
             </ScrollView>
-          </View>
+          </View> }
+          
         </View>
 
         <StatusBar style="auto" />

@@ -1,28 +1,31 @@
-import styles from "./style";
-import {
-  Text,
-  View,
-  FlatList,
-  TouchableOpacity,
-  ImageBackground,
-  Image,
-} from "react-native";
 import { StatusBar } from "expo-status-bar";
+import { useEffect, useState } from "react";
+import {
+  FlatList, Image, ImageBackground, Text, TouchableOpacity, View
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { recipeByPantry } from "../../assets/static/recipe";
+import { getRecipebyPantry } from "../../backendCalls/recipeData";
+import styles from "./style";
 
 export default function HomeScreen({ navigation }) {
+
+const [recipeByPantry, setRecipeByPantry] = useState([])
+
+  useEffect(() => {
+    getRecipebyPantry().then((response)=>{
+       setRecipeByPantry(response)
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }, []);
+
   const renderItems = ({ item }) => (
     <TouchableOpacity onPress={()=>{
       navigation.navigate("Recipe",{
           item:item
       });
   }}>
-      {/* <TouchableOpacity onPress={()=>{
-            navigation.navigate("Description",{
-                item:item
-            });
-        }}> */}
       <View style={styles.recipeContainer}>
         <ImageBackground
           source={{ uri: item.image }}
@@ -44,11 +47,6 @@ export default function HomeScreen({ navigation }) {
 
   const listFooterItem = () => (
     <TouchableOpacity style={styles.footerContainer}>
-      {/* <TouchableOpacity onPress={()=>{
-            navigation.navigate("Description",{
-                item:item
-            });
-        }}> */}
       <ImageBackground
         source={require("../../assets/image/add.png")}
         style={styles.footerImageBackground}
@@ -63,9 +61,6 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* <View style={styles.titleContainer}> */}
-      {/* <Text style={styles.titleText}>Hello User, Lets make Something!</Text> */}
-      {/* </View> */}
       <View style={styles.mainContainer}>
         <View style={styles.topContainer}>
           <Image
@@ -94,7 +89,6 @@ export default function HomeScreen({ navigation }) {
           style={styles.listContainer}
           showsHorizontalScrollIndicator={false}
         />
-
         <StatusBar style="auto" />
       </View>
     </SafeAreaView>
