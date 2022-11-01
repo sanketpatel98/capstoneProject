@@ -7,6 +7,7 @@ import HomeScreen from "./src/screens/HomeScreen/HomeScreen";
 import Recipe from "./src/screens/HomeScreen/Stacks/RecipeStack/Recipe";
 import SearchScreen from "./src/screens/SearchScreen/SearchScreen";
 import SettingScreen from "./src/screens/SettingsScreen/SettingsScreen";
+import PantryScreen from "./src/screens/PantryScreen/PantryScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -67,6 +68,21 @@ export default function App() {
             tabBarIcon: ({ color, size }) => (
               <MaterialCommunityIcons
                 name="magnify"
+                color={color}
+                size={size}
+              />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Pantry"
+          component={PantryScreen}
+          options={{
+            headerShown: false,
+            tabBarLabel: "Pantry",
+            tabBarIcon: ({ color, size }) => (
+              <MaterialCommunityIcons
+                name="playlist-edit"
                 color={color}
                 size={size}
               />

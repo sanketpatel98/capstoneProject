@@ -40,14 +40,7 @@ export default function Recipe({ route, navigation }) {
 
   const baseUrl = 'https://spoonacular.com/cdn/ingredients_500x500/'
   const renderItems = ({ item }) => (
-    <TouchableOpacity
-    // onPress={() => {
-    //   navigation.navigate('Recipe', {
-    //     item: item,
-    //   })
-    // }}
-    >
-
+    <TouchableOpacity>
       <View style={styles.ingredientContainer}>
         <ImageBackground
           source={{ uri: item.image }}
@@ -66,10 +59,6 @@ export default function Recipe({ route, navigation }) {
     </TouchableOpacity>
   )
 
-
-  // return (<View style={{flex:1,alignItems:'center', justifyContent:'center'}}>
-  //   <Text>Hello</Text>
-  // </View>)
   return (
     <ScrollView style={styles.container} nestedScrollEnabled = {true}>
       <StatusBar hidden />
