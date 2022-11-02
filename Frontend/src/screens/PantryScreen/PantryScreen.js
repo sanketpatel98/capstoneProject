@@ -15,11 +15,15 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { add } from "../../Redux/pantrySlice";
 import { ingredients } from "../../assets/static/Ingredients";
+import { Snackbar } from "react-native-paper";
 
 export default function PantryScreen() {
   const [emptyImageDisabled, setEmptyImageDisabled] = useState(true);
   const [ingredientSuggestionList, setIngredientSuggestionList] =
     useState(ingredients);
+  const [snackBarEnabled, setSnackBarEnabled] = useState(false);
+  const [recentIngredient, setRecentIngredient] = useState("");
+  const [userInputIngredient, setUserInputIngredient] = useState("");
 
   const dispatch = useDispatch();
   const pantry = useSelector((state) => state.pantry.list);
@@ -30,10 +34,17 @@ export default function PantryScreen() {
   const addIngredientToPantry = (ingredient) => {
     console.log(ingredient);
     console.log("-------");
-    dispatch(add(ingredient))
+    if (!pantry.includes(ingredient)) {
+      dispatch(add(ingredient));
+      setEmptyImageDisabled(true);
+      setUserInputIngredient("");
+      setRecentIngredient(ingredient[0]);
+      setSnackBarEnabled(true);
+    }
   };
 
   const onTextChange = (text) => {
+    setUserInputIngredient(text);
     if (text) {
       setEmptyImageDisabled(false);
       setIngredientSuggestionList(
@@ -49,10 +60,14 @@ export default function PantryScreen() {
   const renderIngredientSuggestions = ({ item }) => (
     // <TouchableOpacity onPress={() => {}}>
     <View style={styles.suggestedIngredientContainer}>
-      <TouchableOpacity onPress={()=>{addIngredientToPantry(item)}}>
+      <TouchableOpacity
+        onPress={() => {
+          addIngredientToPantry(item);
+        }}
+      >
         <MaterialCommunityIcons name="plus" size={22} color={"green"} />
       </TouchableOpacity>
-      
+
       <Text style={styles.suggestedIngredientText}>{item[0]}</Text>
     </View>
     // </TouchableOpacity>
@@ -66,6 +81,10 @@ export default function PantryScreen() {
       <Text style={styles.suggestedIngredientText}>{item[0]}</Text>
     </View>
   );
+
+  const onDismissSnackBar = () => {
+    setSnackBarEnabled(false);
+  };
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar hidden />
@@ -78,6 +97,7 @@ export default function PantryScreen() {
             placeholderTextColor={"white"}
             underlineColorAndroid="transparent"
             onChangeText={onTextChange}
+            value={userInputIngredient}
             // onBlur={textInputOnBlured}
           ></TextInput>
         </View>
@@ -110,6 +130,19 @@ export default function PantryScreen() {
         )}
       </View>
       <StatusBar style="auto" />
+      <Snackbar
+        visible={snackBarEnabled}
+        onDismiss={onDismissSnackBar}
+        action={{
+          label: "OK",
+          onPress: () => {
+            // Do something
+            setSnackBarEnabled(false);
+          },
+        }}
+      >
+        {recentIngredient} added!
+      </Snackbar>
     </SafeAreaView>
   );
 }
