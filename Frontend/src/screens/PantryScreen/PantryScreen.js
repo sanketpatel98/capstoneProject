@@ -13,7 +13,7 @@ import { StatusBar } from "expo-status-bar";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
-import { add } from "../../Redux/pantrySlice";
+import { add, remove } from "../../Redux/pantrySlice";
 import { ingredients } from "../../assets/static/Ingredients";
 import { Snackbar } from "react-native-paper";
 
@@ -31,6 +31,10 @@ export default function PantryScreen() {
     console.log(pantry.length);
   }, []);
 
+  // useEffect(()=>{
+  //   // setUserInputIngredient(pantry)
+  // }, pantry)
+
   const addIngredientToPantry = (ingredient) => {
     console.log(ingredient);
     console.log("-------");
@@ -42,6 +46,11 @@ export default function PantryScreen() {
       setSnackBarEnabled(true);
     }
   };
+
+  const deleteIngredientFromPantry = (item) => {
+    console.log(item);
+    dispatch(remove(item[1]))
+  }
 
   const onTextChange = (text) => {
     setUserInputIngredient(text);
@@ -74,11 +83,14 @@ export default function PantryScreen() {
   );
 
   const renderPantry = ({ item }) => (
-    <View style={styles.suggestedIngredientContainer}>
-      <TouchableOpacity>
-        <MaterialCommunityIcons name="plus" size={22} color={"green"} />
+    <View style={styles.addedIngredientContainer}>
+      
+      <Text style={styles.addedIngredientText}>{item[0]}</Text>
+      <TouchableOpacity onPress={()=>{
+        deleteIngredientFromPantry(item)
+      }}>
+        <MaterialCommunityIcons name="delete-outline" size={22} color={"red"} />
       </TouchableOpacity>
-      <Text style={styles.suggestedIngredientText}>{item[0]}</Text>
     </View>
   );
 

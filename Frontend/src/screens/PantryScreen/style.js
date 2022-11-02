@@ -58,7 +58,18 @@ const styles = StyleSheet.create({
       paddingVertical: 5,
       borderBottomWidth: 1
     },
+    addedIngredientContainer: {
+      flexDirection: 'row',
+      borderBottomColor: 'black',
+      paddingVertical: 5,
+      borderBottomWidth: 1,
+      justifyContent: 'space-between'
+    },
     suggestedIngredientText: {
+      fontSize: SIZES.large,
+      marginStart: 5
+    },
+    addedIngredientText: {
       fontSize: SIZES.large,
       marginStart: 5
     }

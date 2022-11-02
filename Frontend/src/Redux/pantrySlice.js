@@ -1,19 +1,38 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  list: []
-}
+  list: [],
+};
 
 export const pantrySlice = createSlice({
-  name: 'pantry',
+  name: "pantry",
   initialState,
   reducers: {
     add: (state, action) => {
-      state.list.push(action.payload)
+      state.list.push(action.payload);
+    },
+    remove: (state, action) => {
+      // const index = state.list.indexOf(action.payload);
+      console.log("Action.pyload = "+ action.payload);
+      for (let index = 0; index < state.list.length; index++) {
+        const element = state.list[index];
+        if (element[1] == action.payload) {
+          state.list.splice(index, 1);
+          console.log('removed');
+          break;
+        }
+      }
+
+      // const index = state.list.filter((ingredient) => ingredient[1] == action.payload )
+      // if (index > -1) {
+      //   // only splice array when item is found
+      //   state.list.splice(index, 1); // 2nd parameter means remove one item only
+      // }
+      // state.list.
     },
   },
-})
+});
 
-export const { add } = pantrySlice.actions
+export const { add, remove } = pantrySlice.actions;
 
-export default pantrySlice.reducer
+export default pantrySlice.reducer;
