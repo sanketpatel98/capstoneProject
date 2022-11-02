@@ -16,26 +16,20 @@ app.use(
 );
 
 app.get("/recipesByPantry", async (req, res) => {
-  //   axios.get("https://api.spoonacular.com/recipes/716429/information?includeNutrition=false&apiKey=8ba13912526d472ea42caafced0c2fa9").then((response) => {
-  //     res.send(response.status);
-  //   });
-  getRecipesByPantry()
+  getRecipesByPantry(req.query.ingredients)
     .then((response) => {
-      //   console.log(JSON.stringify(response));
-      console.log("Request for getRecipesByPantry");
       res.send({
         response: response,
       });
     })
     .catch((error) => {
+      res.status(400).send(error)
       console.log(error);
     });
 });
 
 app.get("/recipesInstructionById", async (req, res) => {
-  console.log(req.query.id);
   getRecipesInstructionById(req.query.id).then((response) => {
-    console.log("Request for getRecipesInstructionById");
     res.send({
       response: response,
     });
@@ -43,10 +37,8 @@ app.get("/recipesInstructionById", async (req, res) => {
 });
 
 app.get("/recipeById", async (req, res) => {
-  console.log(req.query.id);
   if (req.query.id) {
     getRecipeById(req.query.id).then((response) => {
-      console.log("Request for getRecipeById");
       res.send({
         response: response,
       });

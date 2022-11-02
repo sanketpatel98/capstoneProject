@@ -3,9 +3,10 @@ import axios from "axios";
 const API_URL =
     Platform.OS === "ios" ? "http://localhost:3000" : "http://10.0.2.2:3000";
 
-export const getRecipebyPantry = () => {
+export const getRecipebyPantry = (pantry) => {
+  const pantryQuery = pantry.map((ingredient) => ingredient[0].replace(" ", "+"))
   return axios
-    .get(`${API_URL}/recipesByPantry`)
+    .get(`${API_URL}/recipesByPantry?ingredients=${pantryQuery.toString()}`)
     .then((response) => response.data.response)
     .catch((error) => {
       console.log(error);

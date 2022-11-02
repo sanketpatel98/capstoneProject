@@ -2,10 +2,10 @@ const axios = require("axios");
 
 const API_KEY = '8ba13912526d472ea42caafced0c2fa9'
 
-const getRecipesByPantry = async () => {
+const getRecipesByPantry = async (ingredients) => {
   return await axios
     .get(
-      `https://api.spoonacular.com/recipes/findByIngredients?ingredients=carrots,tomatoes&apiKey=${API_KEY}`
+      `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredients}&apiKey=${API_KEY}`
     ).then((response) => {
         return response.data
     })

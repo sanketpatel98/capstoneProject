@@ -20,7 +20,6 @@ export default function Recipe({ route, navigation }) {
     // getting recipe(for readyInMinutes)
     getRecipeById(route.params.item.id)
     .then((res) => {
-      console.log("getRecipeById RESPONSE SUCCESS");
       setReadyInMinutes(res.readyInMinutes)
     })
     .catch((error) => {
@@ -30,7 +29,6 @@ export default function Recipe({ route, navigation }) {
     // getting instructions 
     getRecipeInstructionById(route.params.item.id)
       .then((res) => {
-        console.log("getRecipeInstructionById RESPONSE SUCCESS");
         setRecipeInstructions(res)
       })
       .catch((error) => {

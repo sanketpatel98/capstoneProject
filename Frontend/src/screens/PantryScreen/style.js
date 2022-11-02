@@ -4,6 +4,7 @@ import { COLORS, SIZES } from '../../styles/commonStyles';
 
 const styles = StyleSheet.create({
     container: {
+      paddingTop:10,
       flex: 1,
       backgroundColor: "#9AB8BA",
       alignItems: 'center',
@@ -42,6 +43,24 @@ const styles = StyleSheet.create({
     },
     emptyImage:{
       width: Dimensions.get('window').width - 70
+    },
+    ingredientListContainer:{
+      backgroundColor: "#9AC8BA",
+      borderRadius: 30,
+      borderColor: COLORS.black,
+      margin: 40,
+      padding: 20,
+      width: "80%"
+    },
+    suggestedIngredientContainer: {
+      flexDirection: 'row',
+      borderBottomColor: 'black',
+      paddingVertical: 5,
+      borderBottomWidth: 1
+    },
+    suggestedIngredientText: {
+      fontSize: SIZES.large,
+      marginStart: 5
     }
   });
 

@@ -1,31 +1,56 @@
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import {
-  FlatList, Image, ImageBackground, Text, TouchableOpacity, View
+  FlatList,
+  Image,
+  ImageBackground,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getRecipebyPantry } from "../../backendCalls/recipeData";
 import styles from "./style";
+import { useSelector } from "react-redux";
 
 export default function HomeScreen({ navigation }) {
+  const [recipeByPantry, setRecipeByPantry] = useState([]);
+  const pantry = useSelector((state) => state.pantry.list);
+  const [appReady, setAppReady] = useState(false);
+  useEffect(() => {
+    // pantry.toString()
 
-const [recipeByPantry, setRecipeByPantry] = useState([])
+    getRecipebyPantry(pantry)
+      .then((response) => {
+        setRecipeByPantry(response);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [pantry]);
 
   useEffect(() => {
-    getRecipebyPantry().then((response)=>{
-       setRecipeByPantry(response)
-    })
-    .catch((err) => {
-      console.log(err);
-    })
+    getRecipebyPantry([
+      ["acorn squash", 11482],
+      ["adobo sauce", 6979],
+    ])
+      .then((response) => {
+        setRecipeByPantry(response);
+        setAppReady(true);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
   const renderItems = ({ item }) => (
-    <TouchableOpacity onPress={()=>{
-      navigation.navigate("Recipe",{
-          item:item
-      });
-  }}>
+    <TouchableOpacity
+      onPress={() => {
+        navigation.navigate("Recipe", {
+          item: item,
+        });
+      }}
+    >
       <View style={styles.recipeContainer}>
         <ImageBackground
           source={{ uri: item.image }}
@@ -61,36 +86,38 @@ const [recipeByPantry, setRecipeByPantry] = useState([])
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.mainContainer}>
-        <View style={styles.topContainer}>
-          <Image
-            source={require("../../assets/image/topIcon.png")}
-            style={styles.topIcon}
-          />
-          <TouchableOpacity>
+      {appReady && (
+        <View style={styles.mainContainer}>
+          <View style={styles.topContainer}>
             <Image
-              source={require("../../assets/image/settings-black.png")}
+              source={require("../../assets/image/topIcon.png")}
               style={styles.topIcon}
             />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.greetingsContainer}>
-          <Text style={styles.titleText}>Let's Find</Text>
-          <Text style={styles.titleText}>Your Recipe! </Text>
-        </View>
+            <TouchableOpacity>
+              <Image
+                source={require("../../assets/image/settings-black.png")}
+                style={styles.topIcon}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.greetingsContainer}>
+            <Text style={styles.titleText}>Let's Find</Text>
+            <Text style={styles.titleText}>Your Recipe! </Text>
+          </View>
 
-        <Text style={styles.listTitle}>Recipes using Pantry</Text>
-        <FlatList
-          data={recipeByPantry}
-          renderItem={renderItems}
-          keyExtractor={(item) => item.id}
-          horizontal={true}
-          ListFooterComponent={listFooterItem}
-          style={styles.listContainer}
-          showsHorizontalScrollIndicator={false}
-        />
-        <StatusBar style="auto" />
-      </View>
+          <Text style={styles.listTitle}>Recipes using Pantry</Text>
+          <FlatList
+            data={recipeByPantry}
+            renderItem={renderItems}
+            keyExtractor={(item) => item.id}
+            horizontal={true}
+            ListFooterComponent={listFooterItem}
+            style={styles.listContainer}
+            showsHorizontalScrollIndicator={false}
+          />
+          <StatusBar style="auto" />
+        </View>
+      )}
     </SafeAreaView>
   );
 }
