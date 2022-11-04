@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 
 export default function HomeScreen({ navigation }) {
   const [recipeByPantry, setRecipeByPantry] = useState([]);
+  const [popularRecipes, setPopularRecipes] = useState([]);
   const pantry = useSelector((state) => state.pantry.list);
   const [appReady, setAppReady] = useState(false);
   useEffect(() => {
@@ -35,7 +36,7 @@ export default function HomeScreen({ navigation }) {
       ["adobo sauce", 6979],
     ])
       .then((response) => {
-        setRecipeByPantry(response);
+        setPopularRecipes(response);
         setAppReady(true);
       })
       .catch((err) => {
@@ -105,9 +106,24 @@ export default function HomeScreen({ navigation }) {
             <Text style={styles.titleText}>Your Recipe! </Text>
           </View>
 
-          <Text style={styles.listTitle}>Recipes using Pantry</Text>
+          {recipeByPantry.length > 0 && (
+            <>
+              <Text style={styles.listTitle}>Recipes using Pantry</Text>
+              <FlatList
+                data={recipeByPantry}
+                renderItem={renderItems}
+                keyExtractor={(item) => item.id}
+                horizontal={true}
+                ListFooterComponent={listFooterItem}
+                style={styles.listContainer}
+                showsHorizontalScrollIndicator={false}
+              />
+            </>
+          )}
+
+          <Text style={styles.listTitle}>Popular recipes</Text>
           <FlatList
-            data={recipeByPantry}
+            data={popularRecipes}
             renderItem={renderItems}
             keyExtractor={(item) => item.id}
             horizontal={true}

@@ -85,7 +85,7 @@ export default function PantryScreen() {
   const renderPantry = ({ item }) => (
     <View style={styles.addedIngredientContainer}>
       
-      <Text style={styles.addedIngredientText}>{item[0]}</Text>
+      <Text style={styles.addedIngredientText}>{item[0].charAt(0).toUpperCase() + item[0].slice(1)}</Text>
       <TouchableOpacity onPress={()=>{
         deleteIngredientFromPantry(item)
       }}>

@@ -49,8 +49,8 @@ export default function Recipe({ route, navigation }) {
         <View style={styles.ingredientDescriptionContainer}>
           <Text style={styles.descriptionText}>
             {item.name.length >= 20
-              ? item.name.substring(0, 19) + '...'
-              : item.name}
+              ? item.name.substring(0, 19).charAt(0).toUpperCase() + item.name.substring(0, 19).slice(1) + '...'
+              : item.name.charAt(0).toUpperCase() + item.name.slice(1)}
           </Text>
         </View>
       </View>
