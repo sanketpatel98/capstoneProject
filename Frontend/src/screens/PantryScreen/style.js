@@ -55,13 +55,13 @@ const styles = StyleSheet.create({
     suggestedIngredientContainer: {
       flexDirection: 'row',
       borderBottomColor: 'black',
-      paddingVertical: 5,
+      paddingVertical: 11,
       borderBottomWidth: 1
     },
     addedIngredientContainer: {
       flexDirection: 'row',
       borderBottomColor: 'black',
-      paddingVertical: 5,
+      paddingVertical: 11,
       borderBottomWidth: 1,
       justifyContent: 'space-between'
     },

@@ -82,7 +82,7 @@ export default function PantryScreen() {
         <RenderIconForIngredientSuggestions item={item} />
       </TouchableOpacity>
 
-      <Text style={styles.suggestedIngredientText}>{item[0]}</Text>
+      <Text style={styles.suggestedIngredientText}>{item[0].charAt(0).toUpperCase() + item[0].slice(1)}</Text>
     </View>
     // </TouchableOpacity>
   );
