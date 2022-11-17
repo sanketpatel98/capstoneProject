@@ -36,6 +36,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
     alignItems: "center",
     justifyContent: "center",
+    // backgroundColor: "#DDF7F8",
   },
   recipeContainer: {
     borderColor: COLORS.black,

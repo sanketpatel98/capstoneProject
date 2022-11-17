@@ -1,42 +1,51 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react";
 import {
-  FlatList, ImageBackground, ScrollView,
-  StatusBar, Text, TouchableOpacity, View
-} from 'react-native'
-import heart from '../../../../assets/image/heart.png'
-import back from '../../../../assets/image/left.png'
-import { getRecipeById, getRecipeInstructionById } from '../../../../backendCalls/recipeData'
-import { CircleButton } from '../../../../components/CircleButton'
-import styles from './style'
+  FlatList,
+  ImageBackground,
+  ScrollView,
+  StatusBar,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import heart from "../../../../assets/image/heart.png";
+import back from "../../../../assets/image/left.png";
+import {
+  getRecipeById,
+  getRecipeInstructionById,
+} from "../../../../backendCalls/recipeData";
+import { CircleButton } from "../../../../components/CircleButton";
+import styles from "./style";
 
 export default function Recipe({ route, navigation }) {
+  const [recipe, setRecipe] = useState({});
+  const [recipeInstructions, setRecipeInstructions] = useState([]);
+  const [readyInMinutes, setReadyInMinutes] = useState();
+  const [instructionOrSummaryEnabled, setInstructionOrSummaryEnabled] =
+    useState(true);
 
-  const [recipe, setRecipe] = useState([])
-  const [recipeInstructions, setRecipeInstructions] = useState([])
-  const [readyInMinutes, setReadyInMinutes] = useState()
-
-  useEffect(()=>{
-
+  useEffect(() => {
     // getting recipe(for readyInMinutes)
     getRecipeById(route.params.item.id)
-    .then((res) => {
-      setReadyInMinutes(res.readyInMinutes)
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-
-    // getting instructions 
-    getRecipeInstructionById(route.params.item.id)
       .then((res) => {
-        setRecipeInstructions(res)
+        setReadyInMinutes(res.readyInMinutes);
+        setRecipe(res);
       })
       .catch((error) => {
         console.log(error);
       });
-  },[])
 
-  const baseUrl = 'https://spoonacular.com/cdn/ingredients_500x500/'
+    // getting instructions
+    getRecipeInstructionById(route.params.item.id)
+      .then((res) => {
+        setRecipeInstructions(res);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  const baseUrl = "https://spoonacular.com/cdn/ingredients_500x500/";
   const renderItems = ({ item }) => (
     <TouchableOpacity>
       <View style={styles.ingredientContainer}>
@@ -49,16 +58,18 @@ export default function Recipe({ route, navigation }) {
         <View style={styles.ingredientDescriptionContainer}>
           <Text style={styles.descriptionText}>
             {item.name.length >= 20
-              ? item.name.substring(0, 19).charAt(0).toUpperCase() + item.name.substring(0, 19).slice(1) + '...'
+              ? item.name.substring(0, 19).charAt(0).toUpperCase() +
+                item.name.substring(0, 19).slice(1) +
+                "..."
               : item.name.charAt(0).toUpperCase() + item.name.slice(1)}
           </Text>
         </View>
       </View>
     </TouchableOpacity>
-  )
+  );
 
   return (
-    <ScrollView style={styles.container} nestedScrollEnabled = {true}>
+    <ScrollView style={styles.container} nestedScrollEnabled={true}>
       <StatusBar hidden />
       <View>
         <View style={styles.recipeImageView}>
@@ -93,7 +104,9 @@ export default function Recipe({ route, navigation }) {
               Required Ingredients
             </Text>
             <FlatList
-              data={route.params.item.usedIngredients.concat(route.params.item.missedIngredients)}
+              data={route.params.item.usedIngredients.concat(
+                route.params.item.missedIngredients
+              )}
               renderItem={renderItems}
               keyExtractor={(item) => item.id}
               horizontal={true}
@@ -101,19 +114,44 @@ export default function Recipe({ route, navigation }) {
               showsHorizontalScrollIndicator={false}
             />
           </View>
-          { recipeInstructions.length != 0 && <View style={styles.instructionView}>
-            <Text style={styles.instructionViewTitle}>INSTRUCTIONS</Text>
-            <ScrollView style={styles.stepsScrollView} nestedScrollEnabled = {true} showsVerticalScrollIndicator={false}>
-              {recipeInstructions[0].steps.map((step) => (
-                <Text style={styles.stepsText} key={step.number}>{step.number}) {step.step}</Text>
-              ))}
-            </ScrollView>
-          </View> }
-          
+          {recipeInstructions.length != 0 && (
+            <View style={styles.instructionView}>
+              <View style={styles.instructionAndSummaryTitleContainer}>
+                <TouchableOpacity onPress={()=>{setInstructionOrSummaryEnabled(true)}}>
+                  <Text style={styles.instructionViewTitle}>Instructions</Text>
+                </TouchableOpacity>
+                <Text> | </Text>
+
+                <TouchableOpacity onPress={()=>{setInstructionOrSummaryEnabled(false)}}>
+                  <Text style={styles.instructionViewTitle}>Summary</Text>
+                </TouchableOpacity>
+              </View>
+
+              {recipe.summary && !instructionOrSummaryEnabled && (
+                <View>
+                  <Text style={styles.summaryText}>{recipe.summary.replace(/<[^>]+>/g, "")}</Text>
+                </View>
+              )}
+
+              {instructionOrSummaryEnabled && (
+                <ScrollView
+                  style={styles.stepsScrollView}
+                  nestedScrollEnabled={true}
+                  showsVerticalScrollIndicator={false}
+                >
+                  {recipeInstructions[0].steps.map((step) => (
+                    <Text style={styles.stepsText} key={step.number}>
+                      {step.number}) {step.step}
+                    </Text>
+                  ))}
+                </ScrollView>
+              )}
+            </View>
+          )}
         </View>
 
         <StatusBar style="auto" />
       </View>
     </ScrollView>
-  )
+  );
 }

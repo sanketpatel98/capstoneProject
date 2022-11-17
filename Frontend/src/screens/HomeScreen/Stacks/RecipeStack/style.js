@@ -1,6 +1,6 @@
-import { StyleSheet } from 'react-native'
-import { Dimensions } from 'react-native'
-import { COLORS, SIZES } from '../../../../styles/commonStyles'
+import { StyleSheet } from "react-native";
+import { Dimensions } from "react-native";
+import { COLORS, SIZES } from "../../../../styles/commonStyles";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -9,8 +9,8 @@ const styles = StyleSheet.create({
     // justifyContent: 'center',
   },
   recipeImageBackground: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height * 0.45,
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height * 0.45,
   },
   recipeImageView: {
     flex: 2,
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
   },
   recipeDescriptionTitleView: {
     backgroundColor: COLORS.primary,
-    width: Dimensions.get('window').width,
+    width: Dimensions.get("window").width,
     paddingHorizontal: 40,
     marginTop: -50,
     paddingTop: 30,
@@ -36,10 +36,10 @@ const styles = StyleSheet.create({
   recipeDescriptionTitleText: {
     color: COLORS.black,
     fontSize: SIZES.large + 3,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   floatButton: {
-    alignContent: 'space-between',
+    alignContent: "space-between",
     backgroundColor: COLORS.white,
     flex: 1,
     marginTop: -130,
@@ -47,20 +47,20 @@ const styles = StyleSheet.create({
     maxHeight: 0,
     borderRadius: SIZES.extraLarge,
     borderBottomLeftRadius: SIZES.extraLarge,
-    position: 'absolute',
-    top: Dimensions.get('window').height * 0.22,
+    position: "absolute",
+    top: Dimensions.get("window").height * 0.22,
     left: 0,
     right: 0,
     bottom: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   likeButton: {
-    position: 'absolute',
-    left: Dimensions.get('window').width - 70,
+    position: "absolute",
+    left: Dimensions.get("window").width - 70,
   },
   backButton: {
-    position: 'absolute',
+    position: "absolute",
     left: 30,
   },
   preprationTimeText: {
@@ -74,16 +74,16 @@ const styles = StyleSheet.create({
     width: 140,
   },
   ingredientDescriptionContainer: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   ingredientContainerList: {
     marginTop: 30,
     paddingHorizontal: 25,
-    alignItems: 'center'
+    alignItems: "center",
   },
   ingredientContainerListTitle: {
     fontSize: SIZES.large,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
   },
   listContainer: {
@@ -97,23 +97,33 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     backgroundColor: COLORS.lightGreen,
     borderRadius: 40,
-    marginHorizontal:25,
+    marginHorizontal: 25,
     padding: 30,
-    flex:1
+    flex: 1,
+  },
+  instructionAndSummaryTitleContainer: {
+    flexDirection: "row",
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    marginHorizontal: 20,
+    marginBottom: 15
   },
   instructionViewTitle: {
     color: COLORS.darkGreen,
     fontSize: SIZES.large,
-    fontWeight: 'bold'
+    fontWeight: "bold",
   },
-  stepsScrollView:{
+  stepsScrollView: {
     maxHeight: 300,
-    marginTop: 10 
+    marginTop: 10,
   },
-  stepsText:{
+  stepsText: {
     marginBottom: 10,
-    color: COLORS.darkGreen
+    color: COLORS.darkGreen,
+  },
+  summaryText:{
+    color: COLORS.darkGreen,
   }
-})
+});
 
-export default styles
+export default styles;

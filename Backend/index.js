@@ -1,5 +1,4 @@
 const express = require("express");
-var axios = require("axios");
 var cors = require("cors");
 const {
   getRecipesByPantry,

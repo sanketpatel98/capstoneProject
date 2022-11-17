@@ -7,6 +7,9 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center',
     },
+    workingImage:{
+      width: 300
+    }
   });
 
 export default styles;

@@ -1,7 +1,9 @@
 import axios from "axios";
 
-const API_URL =
-    Platform.OS === "ios" ? "http://localhost:3000" : "http://10.0.2.2:3000";
+// const API_URL =
+//     Platform.OS === "ios" ? "http://localhost:3000" : "http://10.0.2.2:3000";
+
+// const API_URL = 'https://capstoneprojectlevelthree.herokuapp.com'
 
 export const getRecipebyPantry = (pantry) => {
   const pantryQuery = pantry.map((ingredient) => ingredient[0].replace(" ", "+"))
