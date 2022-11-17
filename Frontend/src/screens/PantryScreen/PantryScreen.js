@@ -28,7 +28,6 @@ export default function PantryScreen() {
   const dispatch = useDispatch();
   const pantry = useSelector((state) => state.pantry.list);
   useEffect(() => {
-    console.log(pantry.length);
   }, []);
 
   // useEffect(()=>{
@@ -36,8 +35,6 @@ export default function PantryScreen() {
   // }, pantry)
 
   const addIngredientToPantry = (ingredient) => {
-    console.log(ingredient);
-    console.log("-------");
     if (!pantry.includes(ingredient)) {
       dispatch(add(ingredient));
       setEmptyImageDisabled(true);
@@ -48,7 +45,6 @@ export default function PantryScreen() {
   };
 
   const deleteIngredientFromPantry = (item) => {
-    console.log(item);
     dispatch(remove(item[1]))
   }
 
@@ -66,6 +62,14 @@ export default function PantryScreen() {
     }
   };
 
+  const RenderIconForIngredientSuggestions = ({item}) => {
+    if(!pantry.includes(item)){ 
+      return (<MaterialCommunityIcons name="plus" size={22} color={"green"} />)
+    } else {
+      return (<MaterialCommunityIcons name="check" size={22} color={"green"} />)
+    }
+    
+  }
   const renderIngredientSuggestions = ({ item }) => (
     // <TouchableOpacity onPress={() => {}}>
     <View style={styles.suggestedIngredientContainer}>
@@ -74,7 +78,8 @@ export default function PantryScreen() {
           addIngredientToPantry(item);
         }}
       >
-        <MaterialCommunityIcons name="plus" size={22} color={"green"} />
+        {/* <MaterialCommunityIcons name="plus" size={22} color={"green"} /> */}
+        <RenderIconForIngredientSuggestions item={item} />
       </TouchableOpacity>
 
       <Text style={styles.suggestedIngredientText}>{item[0]}</Text>

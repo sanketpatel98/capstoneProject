@@ -13,12 +13,10 @@ export const pantrySlice = createSlice({
     },
     remove: (state, action) => {
       // const index = state.list.indexOf(action.payload);
-      console.log("Action.pyload = "+ action.payload);
       for (let index = 0; index < state.list.length; index++) {
         const element = state.list[index];
         if (element[1] == action.payload) {
           state.list.splice(index, 1);
-          console.log('removed');
           break;
         }
       }
