@@ -8,6 +8,7 @@ import Recipe from "./src/screens/HomeScreen/Stacks/RecipeStack/Recipe";
 import SearchScreen from "./src/screens/SearchScreen/SearchScreen";
 import SettingScreen from "./src/screens/SettingsScreen/SettingsScreen";
 import PantryScreen from "./src/screens/PantryScreen/PantryScreen";
+import ShoppingCartScreen from "./src/screens/ShoppingCartScreen/ShoppingCartScreen";
 import { store } from './src/Redux/store'
 import { Provider } from 'react-redux'
 
@@ -85,6 +86,17 @@ export default function App() {
                   color={color}
                   size={size}
                 />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="Shoppingcart"
+            component={ShoppingCartScreen}
+            options={{
+              headerShown: false,
+              tabBarLabel: "cart",
+              tabBarIcon: ({ color, size }) => (
+                <MaterialCommunityIcons name="cart" color={color} size={size} />
               ),
             }}
           />

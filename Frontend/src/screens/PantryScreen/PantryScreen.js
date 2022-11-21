@@ -158,7 +158,7 @@ export default function PantryScreen() {
           },
         }}
       >
-        {recentIngredient} added!
+        {recentIngredient.charAt(0).toUpperCase() + recentIngredient.slice(1)} added!
       </Snackbar>
     </SafeAreaView>
   );
