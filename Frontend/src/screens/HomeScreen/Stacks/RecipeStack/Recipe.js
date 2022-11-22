@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {
   FlatList,
   ImageBackground,
+  Image,
   ScrollView,
   StatusBar,
   Text,
@@ -16,6 +17,10 @@ import {
 } from "../../../../backendCalls/recipeData";
 import { CircleButton } from "../../../../components/CircleButton";
 import styles from "./style";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { useSelector, useDispatch } from "react-redux";
+import { addToCart } from "../../../../Redux/cartSlice";
+import { Snackbar } from "react-native-paper";
 
 export default function Recipe({ route, navigation }) {
   const [recipe, setRecipe] = useState({});
@@ -23,9 +28,15 @@ export default function Recipe({ route, navigation }) {
   const [readyInMinutes, setReadyInMinutes] = useState();
   const [instructionOrSummaryEnabled, setInstructionOrSummaryEnabled] =
     useState(true);
+  const [requireIngredients, setRequireIngredients] = useState([]);
+  const [snackBarEnabled, setSnackBarEnabled] = useState(false);
+  const [recentIngredient, setRecentIngredient] = useState("");
+  const dispatch = useDispatch();
+  const cart = useSelector((state) => state.cart.list);
 
   useEffect(() => {
     // getting recipe(for readyInMinutes)
+    setIngredientAvailability();
     getRecipeById(route.params.item.id)
       .then((res) => {
         setReadyInMinutes(res.readyInMinutes);
@@ -45,17 +56,28 @@ export default function Recipe({ route, navigation }) {
       });
   }, []);
 
+  useEffect(() => {
+    setIngredientAvailability();
+  }, [cart]);
+
   const baseUrl = "https://spoonacular.com/cdn/ingredients_500x500/";
-  const renderItems = ({ item }) => (
-    <TouchableOpacity>
-      <View style={styles.ingredientContainer}>
-        <ImageBackground
+  const addIngredientToCart = (item) => {
+    if (!cart.includes(item)) {
+      dispatch(addToCart(item));
+      setRecentIngredient(item.name);
+      setSnackBarEnabled(true);
+    }
+  };
+  const RenderItems = ({ item }) => (
+    <View style={styles.ingredientContainer}>
+      <View style={styles.ingredientDescriptionContainer}>
+        <Image
           source={{ uri: item.image }}
           style={styles.ingredientImage}
-          imageStyle={{ borderRadius: 14 }}
+          // imageStyle={{ borderRadius: 14 }}
           resizeMode="cover"
-        ></ImageBackground>
-        <View style={styles.ingredientDescriptionContainer}>
+        ></Image>
+        <View style={styles.descriptionTextContainer}>
           <Text style={styles.descriptionText}>
             {item.name.length >= 20
               ? item.name.substring(0, 19).charAt(0).toUpperCase() +
@@ -65,10 +87,75 @@ export default function Recipe({ route, navigation }) {
           </Text>
         </View>
       </View>
-    </TouchableOpacity>
+      <View style={styles.availabilityContainer}>
+        {item.available ? (
+          <MaterialCommunityIcons name="check" color={"green"} size={25} />
+        ) : (
+          <TouchableOpacity
+            onPress={() => {
+              addIngredientToCart(item);
+
+            }}
+          >
+            {cart.includes(item) ? (
+              <MaterialCommunityIcons
+                name="cart-check"
+                color={"green"}
+                size={25}
+              />
+            ) : (
+              <MaterialCommunityIcons
+                name="cart-plus"
+                color={"orange"}
+                size={25}
+              />
+            )}
+          </TouchableOpacity>
+        )}
+      </View>
+    </View>
   );
 
+  const setIngredientAvailability = () => {
+    var updatedUsedIngredient = route.params.item.usedIngredients.map(
+      (element) => {
+        var updatedElement = element;
+        updatedElement["available"] = true;
+        return updatedElement;
+      }
+    );
+    var updatedmissedIngredient = route.params.item.missedIngredients.map(
+      (element) => {
+        var updatedElement = element;
+        updatedElement['isAddedToCart'] = true
+        // console.log("this: "+ updatedElement.isAddedToCart);
+        // if (cart.includes(element)) {
+        //   updatedElement.isAddedToCart = true;
+        //   // console.log(`comes here when ${element.name}`);
+        //   console.log(updatedElement);
+        //   console.log("Came here");
+        // } else {
+        //   updatedElement["isAddedToCart"] = false
+        // }
+        updatedElement["available"] = false;
+        
+        return updatedElement;
+      }
+    );
+    // console.log('--------------------------------------------------');
+    // console.log(updatedUsedIngredient.concat(updatedmissedIngredient));
+    // console.log('--------------------------------------------------');
+    setRequireIngredients(
+      updatedUsedIngredient.concat(updatedmissedIngredient)
+    );
+  };
+
+  const onDismissSnackBar = () => {
+    setSnackBarEnabled(false);
+  };
+
   return (
+    <>
     <ScrollView style={styles.container} nestedScrollEnabled={true}>
       <StatusBar hidden />
       <View>
@@ -103,33 +190,36 @@ export default function Recipe({ route, navigation }) {
             <Text style={styles.ingredientContainerListTitle}>
               Required Ingredients
             </Text>
-            <FlatList
-              data={route.params.item.usedIngredients.concat(
-                route.params.item.missedIngredients
-              )}
-              renderItem={renderItems}
-              keyExtractor={(item) => item.id}
-              horizontal={true}
-              style={styles.listContainer}
-              showsHorizontalScrollIndicator={false}
-            />
+            {requireIngredients.map((item, index) => (
+              <RenderItems item={item} style={{ flex: 1 }} key={index} />
+            ))}
           </View>
           {recipeInstructions.length != 0 && (
             <View style={styles.instructionView}>
               <View style={styles.instructionAndSummaryTitleContainer}>
-                <TouchableOpacity onPress={()=>{setInstructionOrSummaryEnabled(true)}}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setInstructionOrSummaryEnabled(true);
+                  }}
+                >
                   <Text style={styles.instructionViewTitle}>Instructions</Text>
                 </TouchableOpacity>
                 <Text> | </Text>
 
-                <TouchableOpacity onPress={()=>{setInstructionOrSummaryEnabled(false)}}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setInstructionOrSummaryEnabled(false);
+                  }}
+                >
                   <Text style={styles.instructionViewTitle}>Summary</Text>
                 </TouchableOpacity>
               </View>
 
               {recipe.summary && !instructionOrSummaryEnabled && (
                 <View>
-                  <Text style={styles.summaryText}>{recipe.summary.replace(/<[^>]+>/g, "")}</Text>
+                  <Text style={styles.summaryText}>
+                    {recipe.summary.replace(/<[^>]+>/g, "")}
+                  </Text>
                 </View>
               )}
 
@@ -153,5 +243,19 @@ export default function Recipe({ route, navigation }) {
         <StatusBar style="auto" />
       </View>
     </ScrollView>
+    <Snackbar
+        visible={snackBarEnabled}
+        onDismiss={onDismissSnackBar}
+        action={{
+          label: "OK",
+          onPress: () => {
+            // Do something
+            setSnackBarEnabled(false);
+          },
+        }}
+      >
+        {recentIngredient.charAt(0).toUpperCase() + recentIngredient.slice(1)} added!
+      </Snackbar>
+    </>
   );
 }

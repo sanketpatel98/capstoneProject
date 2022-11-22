@@ -11,12 +11,24 @@ import PantryScreen from "./src/screens/PantryScreen/PantryScreen";
 import ShoppingCartScreen from "./src/screens/ShoppingCartScreen/ShoppingCartScreen";
 import { store } from './src/Redux/store'
 import { Provider } from 'react-redux'
+import { useSelector } from "react-redux";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-export default function App() {
+export default AppWrapper = () => {
+  // const store = createStore(rootReducer);
 
+  return (
+    <Provider store={store}> 
+      <App /> 
+    </Provider>
+  )
+}
+
+function App() {
+
+  const cart = useSelector((state) => state.cart.list);
   const MyTheme = {
     ...DefaultTheme,
     colors: {
@@ -45,7 +57,7 @@ export default function App() {
   } 
 
   return (
-    <Provider store={store}>
+    // <Provider store={store}>
       <NavigationContainer theme={MyTheme}>
         <Tab.Navigator>
           <Tab.Screen
@@ -89,7 +101,19 @@ export default function App() {
               ),
             }}
           />
-          <Tab.Screen
+
+{cart.length > 0 ? (<Tab.Screen
+            name="Shoppingcart"
+            component={ShoppingCartScreen}
+            options={{
+              headerShown: false,
+              tabBarLabel: "cart",
+              tabBarIcon: ({ color, size }) => (
+                <MaterialCommunityIcons name="cart" color={color} size={size} />
+              ),
+              tabBarBadge: cart.length
+            }}
+          />) : (<Tab.Screen
             name="Shoppingcart"
             component={ShoppingCartScreen}
             options={{
@@ -99,7 +123,9 @@ export default function App() {
                 <MaterialCommunityIcons name="cart" color={color} size={size} />
               ),
             }}
-          />
+          />) }
+          
+
           <Tab.Screen
             name="Settings"
             component={SettingScreen}
@@ -113,6 +139,6 @@ export default function App() {
           />
         </Tab.Navigator>
       </NavigationContainer>
-    </Provider>
+    // </Provider>
   );
 }
