@@ -66,15 +66,29 @@ const styles = StyleSheet.create({
   preprationTimeText: {
     color: COLORS.gray,
   },
+
   ingredientContainer: {
-    marginEnd: 10,
+    // marginEnd: 10,
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: 10
   },
   ingredientImage: {
-    height: 140,
-    width: 140,
+    height: 40,
+    width: 40,
   },
   ingredientDescriptionContainer: {
-    alignItems: "center",
+    // alignItems: "center",
+    flexDirection: 'row'
+  },
+  descriptionTextContainer:{
+    marginStart: 10,
+    justifyContent: 'center'
+  },
+  availabilityContainer:{
+    justifyContent: 'center'
   },
   ingredientContainerList: {
     marginTop: 30,
