@@ -27,6 +27,10 @@ const styles = StyleSheet.create({
       paddingStart: 15,
       minWidth: Dimensions.get('window').width - 60,
     },
+    headerText:{
+      marginTop: 20,
+      fontSize: SIZES.large
+    },
     listContainer: {
       flex: 5,
       alignItems: 'center',

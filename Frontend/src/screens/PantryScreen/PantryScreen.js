@@ -118,6 +118,7 @@ export default function PantryScreen() {
             // onBlur={textInputOnBlured}
           ></TextInput>
         </View>
+        <Text style={styles.headerText}>Pantry</Text>
       </View>
       <View style={styles.listContainer}>
         {pantry.length == 0 && emptyImageDisabled && (
