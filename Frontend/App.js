@@ -1,18 +1,16 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { useEffect } from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { Provider, useSelector } from "react-redux";
+import { store } from "./src/Redux/store";
 import HomeScreen from "./src/screens/HomeScreen/HomeScreen";
 import Recipe from "./src/screens/HomeScreen/Stacks/RecipeStack/Recipe";
+import PantryScreen from "./src/screens/PantryScreen/PantryScreen";
 import SearchScreen from "./src/screens/SearchScreen/SearchScreen";
 import SettingScreen from "./src/screens/SettingsScreen/SettingsScreen";
-import PantryScreen from "./src/screens/PantryScreen/PantryScreen";
 import ShoppingCartScreen from "./src/screens/ShoppingCartScreen/ShoppingCartScreen";
 import NearByGroceryStoreScreen from "./src/screens/ShoppingCartScreen/Stacks/GroceryStore/NearByGroceryStoreScreen";
-import { store } from "./src/Redux/store";
-import { Provider } from "react-redux";
-import { useSelector } from "react-redux";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();

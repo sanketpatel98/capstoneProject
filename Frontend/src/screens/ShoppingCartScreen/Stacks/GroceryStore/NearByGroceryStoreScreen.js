@@ -1,6 +1,6 @@
-import styles from "./style";
-import { Text, View, Image, SafeAreaView } from "react-native";
+import { SafeAreaView } from "react-native";
 import { WebView } from "react-native-webview";
+import styles from "./style";
 
 export default function NearByGroceryStoreScreen({ route, navigation }) {
   return (

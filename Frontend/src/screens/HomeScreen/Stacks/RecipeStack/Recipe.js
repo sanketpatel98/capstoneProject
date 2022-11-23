@@ -1,26 +1,23 @@
 import { useEffect, useState } from "react";
 import {
-  FlatList,
-  ImageBackground,
-  Image,
-  ScrollView,
+  Image, ImageBackground, ScrollView,
   StatusBar,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
+import { Snackbar } from "react-native-paper";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { useDispatch, useSelector } from "react-redux";
 import heart from "../../../../assets/image/heart.png";
 import back from "../../../../assets/image/left.png";
 import {
   getRecipeById,
-  getRecipeInstructionById,
+  getRecipeInstructionById
 } from "../../../../backendCalls/recipeData";
 import { CircleButton } from "../../../../components/CircleButton";
-import styles from "./style";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { useSelector, useDispatch } from "react-redux";
 import { addToCart } from "../../../../Redux/cartSlice";
-import { Snackbar } from "react-native-paper";
+import styles from "./style";
 
 export default function Recipe({ route, navigation }) {
   const [recipe, setRecipe] = useState({});

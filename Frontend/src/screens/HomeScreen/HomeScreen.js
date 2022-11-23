@@ -6,12 +6,12 @@ import {
   ImageBackground,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useSelector } from "react-redux";
 import { getRecipebyPantry } from "../../backendCalls/recipeData";
 import styles from "./style";
-import { useSelector } from "react-redux";
 
 export default function HomeScreen({ navigation }) {
   const [recipeByPantry, setRecipeByPantry] = useState([]);

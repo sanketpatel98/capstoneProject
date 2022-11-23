@@ -1,21 +1,14 @@
-import styles from "./style";
-import {
-  Text,
-  View,
-  TextInput,
-  SafeAreaView,
-  Image,
-  Button,
-  FlatList,
-  TouchableOpacity,
-} from "react-native";
 import { StatusBar } from "expo-status-bar";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
-import { add, remove } from "../../Redux/pantrySlice";
-import { ingredients } from "../../assets/static/Ingredients";
+import {
+  FlatList, Image, SafeAreaView, Text, TextInput, TouchableOpacity, View
+} from "react-native";
 import { Snackbar } from "react-native-paper";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { useDispatch, useSelector } from "react-redux";
+import { ingredients } from "../../assets/static/Ingredients";
+import { add, remove } from "../../Redux/pantrySlice";
+import styles from "./style";
 
 export default function PantryScreen() {
   const [emptyImageDisabled, setEmptyImageDisabled] = useState(true);

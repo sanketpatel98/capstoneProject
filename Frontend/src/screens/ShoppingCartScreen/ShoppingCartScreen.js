@@ -1,19 +1,13 @@
-import styles from "./style";
-import {
-  Text,
-  View,
-  Image,
-  SafeAreaView,
-  TextInput,
-  FlatList,
-  TouchableOpacity,
-} from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { useSelector, useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import {
+  FlatList, Image,
+  SafeAreaView, Text, TextInput, TouchableOpacity, View
+} from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { Snackbar } from "react-native-paper";
+import { useDispatch, useSelector } from "react-redux";
 import { removeFromCart } from "../../Redux/cartSlice";
+import styles from "./style";
 
 export default function ShoppingCartScreen({ navigation }) {
   const cart = useSelector((state) => state.cart.list);
