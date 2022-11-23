@@ -6,16 +6,21 @@ import {
   ImageBackground,
   Text,
   TouchableOpacity,
-  View
+  View,
+  ScrollView
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
-import { getRecipebyPantry } from "../../backendCalls/recipeData";
+import {
+  getRecipebyPantry,
+  getRecipeByCuisine,
+} from "../../backendCalls/recipeData";
 import styles from "./style";
 
 export default function HomeScreen({ navigation }) {
   const [recipeByPantry, setRecipeByPantry] = useState([]);
   const [popularRecipes, setPopularRecipes] = useState([]);
+  const [recipesByCuisine, setRecipesByCuisine] = useState([]);
   const pantry = useSelector((state) => state.pantry.list);
   const [appReady, setAppReady] = useState(false);
   useEffect(() => {
@@ -42,6 +47,21 @@ export default function HomeScreen({ navigation }) {
       .catch((err) => {
         console.log(err);
       });
+
+    const cuisines = ["Indian", "Chinese", "Mexican", "Greek", "Thai"];
+    // const cuisines = ["Indian", "Chinese"];
+    var cuisinePromises = [];
+    cuisines.forEach((cuisine) => {
+      cuisinePromises.push(getRecipeByCuisine(cuisine).then((response)=>{return response}));
+    });
+    Promise.all(cuisinePromises).then((values)=>{
+      setRecipesByCuisine(values.map((value)=>{
+        console.log(value);
+        return {results:value.recipes.results, cuisine:value.cuisine}
+      }))
+    }).catch((err)=>{
+      console.log(err);
+    })
   }, []);
 
   const renderItems = ({ item }) => (
@@ -88,7 +108,7 @@ export default function HomeScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       {appReady && (
-        <View style={styles.mainContainer}>
+        <ScrollView style={styles.mainContainer} showsVerticalScrollIndicator={false}>
           <View style={styles.topContainer}>
             <Image
               source={require("../../assets/image/topIcon.png")}
@@ -131,8 +151,28 @@ export default function HomeScreen({ navigation }) {
             style={styles.listContainer}
             showsHorizontalScrollIndicator={false}
           />
+
+          {recipesByCuisine.length > 0 ? (
+            recipesByCuisine.map((cuisineRecipes, index) => (
+              <View key={index}>
+                <Text style={styles.listTitle}>{cuisineRecipes.cuisine}</Text>
+                <FlatList
+                  data={cuisineRecipes.results}
+                  renderItem={renderItems}
+                  keyExtractor={(item) => item.id}
+                  horizontal={true}
+                  ListFooterComponent={listFooterItem}
+                  style={styles.listContainer}
+                  showsHorizontalScrollIndicator={false}
+                />
+              </View>
+            ))
+          ) : (
+            <Text></Text>
+          )}
+
           <StatusBar style="auto" />
-        </View>
+        </ScrollView>
       )}
     </SafeAreaView>
   );

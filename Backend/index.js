@@ -4,6 +4,7 @@ const {
   getRecipesByPantry,
   getRecipesInstructionById,
   getRecipeById,
+  getRecipeByCuisine
 } = require("./spoonacularAPI");
 const app = express();
 const port = 3000;
@@ -25,6 +26,25 @@ app.get("/recipesByPantry", async (req, res) => {
       res.status(400).send(error)
       console.log(error);
     });
+});
+
+app.get("/recipeByCuisine", async (req, res) => {
+
+  console.log(`cuisine = ${req.query.cuisine}`);
+  if (req.query.cuisine) {
+    getRecipeByCuisine(req.query.cuisine)
+    .then((response) => {
+      res.send({
+        response: {recipes:response, cuisine:req.query.cuisine},
+      });
+    })
+    .catch((error) => {
+      res.status(400).send(error)
+      console.log(error);
+    });
+  } else {
+    res.status(400).send("SERVER RESPONSE => Cuisine not found in the query param")
+  }
 });
 
 app.get("/recipesInstructionById", async (req, res) => {

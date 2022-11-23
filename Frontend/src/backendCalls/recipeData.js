@@ -34,3 +34,13 @@ return axios
     console.log(error);
   });
 };
+
+export const getRecipeByCuisine = (cuisine) => {
+  // recipeByCuisine
+return axios
+  .get(`${API_URL}/recipeByCuisine?cuisine=${cuisine}`)
+  .then((response) => response.data.response)
+  .catch((error) => {
+    console.log(error);
+  });
+};
