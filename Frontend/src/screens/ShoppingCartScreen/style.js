@@ -10,6 +10,9 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center',
     },
+    buttonContainer:{
+      flexDirection: 'row'
+    },
     headerText:{
       marginTop: 20,
       fontSize: SIZES.large

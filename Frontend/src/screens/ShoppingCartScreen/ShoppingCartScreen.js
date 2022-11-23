@@ -15,7 +15,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { Snackbar } from "react-native-paper";
 import { removeFromCart } from "../../Redux/cartSlice";
 
-export default function ShoppingCartScreen() {
+export default function ShoppingCartScreen({ navigation }) {
   const cart = useSelector((state) => state.cart.list);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -23,21 +23,40 @@ export default function ShoppingCartScreen() {
   }, [cart]);
 
   const deleteIngredientFromCart = (item) => {
-    dispatch(removeFromCart(item.name))
-  }
+    dispatch(removeFromCart(item.name));
+  };
 
   const renderPantry = ({ item }) => (
     <View style={styles.addedIngredientContainer}>
       <Text style={styles.addedIngredientText}>
         {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
       </Text>
-      <TouchableOpacity
-        onPress={() => {
-          deleteIngredientFromCart(item)
-        }}
-      >
-        <MaterialCommunityIcons name="delete-outline" size={22} color={"red"} />
-      </TouchableOpacity>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("NearByGroceryStore",{
+              ingredient: item
+            });
+          }}
+        >
+          <MaterialCommunityIcons
+            name="magnify"
+            size={22}
+            color={"green"}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            deleteIngredientFromCart(item);
+          }}
+        >
+          <MaterialCommunityIcons
+            name="delete-outline"
+            size={22}
+            color={"red"}
+          />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 
