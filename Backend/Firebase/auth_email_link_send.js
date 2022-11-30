@@ -1,6 +1,7 @@
 const {
   createUserWithEmailAndPassword,
   sendEmailVerification,
+  signInWithEmailAndPassword
 } = require("firebase/auth");
 const { auth } = require("./Firebase");
 
@@ -16,6 +17,11 @@ const creatUser = async (email, password) => {
   return userCred;
 };
 
+const userSignIn = async (email, password) => {
+  return signInWithEmailAndPassword(auth, email, password)
+}
+
 module.exports = {
   creatUser: creatUser,
+  userSignIn: userSignIn
 };

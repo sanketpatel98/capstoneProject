@@ -1,7 +1,7 @@
 const axios = require("axios");
 
 const API_KEYS = ['cd00f5560c0e40a4bc20c6c69776e170','8ba13912526d472ea42caafced0c2fa9','647fdb3776dc469794d7db52e588a636','6cf1d983c37540d6b13ee6c9d9caef7f','7b6f91eab8184d10aa0dd7bd6c1e6191','7f4523feb8fb437f9d3332517567974c','108301908c134907af3370904d8332b4','1cbf2d7f00c241289e887bded81927ba']
-const API_KEY = API_KEYS[7]
+const API_KEY = API_KEYS[0]
 
 const getRecipesByPantry = async (ingredients) => {
   return await axios

@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
-import {
+import { 
   getRecipebyPantry,
   getRecipeByCuisine,
 } from "../../backendCalls/recipeData";
