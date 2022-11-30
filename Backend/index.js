@@ -1,4 +1,5 @@
 const express = require("express");
+const { creatUser } = require('./Firebase/auth_email_link_send')
 var cors = require("cors");
 const {
   getRecipesByPantry,
@@ -14,6 +15,9 @@ app.use(
     origin: "*",
   })
 );
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.get("/recipesByPantry", async (req, res) => {
   getRecipesByPantry(req.query.ingredients)
@@ -65,6 +69,22 @@ app.get("/recipeById", async (req, res) => {
   }
   
 });
+
+app.post("/createUser", async (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  creatUser(email, password)
+  .then((userCred) => {
+    res.send({
+      userCred:userCred
+    })
+  })
+  .catch((error)=>{
+    res.status(400).send(error)
+  })
+});
 app.listen(port, () => {
   console.log(`Example app listening on port: ${port}`);
 });
+
+

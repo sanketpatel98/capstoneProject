@@ -11,6 +11,7 @@ import SearchScreen from "./src/screens/SearchScreen/SearchScreen";
 import SettingScreen from "./src/screens/SettingsScreen/SettingsScreen";
 import ShoppingCartScreen from "./src/screens/ShoppingCartScreen/ShoppingCartScreen";
 import NearByGroceryStoreScreen from "./src/screens/ShoppingCartScreen/Stacks/GroceryStore/NearByGroceryStoreScreen";
+import LoginScreen from "./src/screens/LoginScreen/LoginScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -48,6 +49,11 @@ function App() {
         <Stack.Screen
           name="Recipe"
           component={Recipe}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
