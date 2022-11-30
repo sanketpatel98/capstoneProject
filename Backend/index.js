@@ -29,8 +29,6 @@ app.get("/recipesByPantry", async (req, res) => {
 });
 
 app.get("/recipeByCuisine", async (req, res) => {
-
-  console.log(`cuisine = ${req.query.cuisine}`);
   if (req.query.cuisine) {
     getRecipeByCuisine(req.query.cuisine)
     .then((response) => {

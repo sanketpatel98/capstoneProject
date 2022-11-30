@@ -55,7 +55,6 @@ export default function HomeScreen({ navigation }) {
     });
     Promise.all(cuisinePromises).then((values)=>{
       setRecipesByCuisine(values.map((value)=>{
-        console.log(value);
         return {results:value.recipes.results, cuisine:value.cuisine}
       }))
     }).catch((err)=>{
