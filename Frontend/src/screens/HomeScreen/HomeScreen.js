@@ -49,7 +49,6 @@ export default function HomeScreen({ navigation }) {
       });
 
     const cuisines = ["Indian", "Chinese", "Mexican", "Greek", "Thai"];
-    // const cuisines = ["Indian", "Chinese"];
     var cuisinePromises = [];
     cuisines.forEach((cuisine) => {
       cuisinePromises.push(getRecipeByCuisine(cuisine).then((response)=>{return response}));
