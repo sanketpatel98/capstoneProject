@@ -5,50 +5,38 @@ import { CircleButton } from "../../components/CircleButton";
 import back from "../../assets/image/left.png";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { Button, TextInput } from "react-native-paper";
-import { useState, useEffect } from "react";
-import { userSignIn } from "../../backendCalls/user";
+import { useState } from "react";
+import { userSignUp } from "../../backendCalls/user";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../Redux/userDataSclice";
-import { Snackbar } from "react-native-paper";
 
-export default function LoginScreen({ route, navigation }) {
+export default function SignupScreen({ route, navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("")
   const [loadingButton, setLoadingButton] = useState(false);
-  const [loginError, setLoginError] = useState("");
-  const [snackBarEnabled, setSnackBarEnabled] = useState(false);
+  const [signUpError, setSignUpError] = useState("");
+
   const dispatch = useDispatch();
 
-  const onLoginButtonPressed = () => {
+  const onSignUpButtonPressed = () => {
     setLoadingButton(true);
-    userSignIn(email.toLowerCase(), password)
+    userSignUp(email.toLowerCase(), password)
       .then((userRef) => {
-        if (userRef.data.response) {
-          if (userRef.data.response.user.emailVerified) {
-            dispatch(login(userRef.data.response));
-            navigation.goBack();
-          } else {
-            setLoginError("Please verify your email");
-            setLoadingButton(false);
-          }
+        console.log(userRef.data);
+        if (userRef.data.userCred) {
+          navigation.navigate("Login", {message: 'verify email'});
         } else {
-          if (userRef.data.code == "auth/wrong-password") {
-            setLoginError("Please check your password");
-            setLoadingButton(false);
-          } else if (userRef.data.code == "auth/user-not-found") {
-            setLoginError("Email not registered");
+          if (userRef.data.code == "auth/weak-password") {
+            setSignUpError("Please enter strong password");
             setLoadingButton(false);
           } else if (userRef.data.code == "auth/invalid-email") {
-            setLoginError("Email not valid");
+            setSignUpError("Email not valid");
             setLoadingButton(false);
           }
         }
       })
       .catch((err) => {});
-  };
-
-  const onDismissSnackBar = () => {
-    setSnackBarEnabled(false);
   };
 
   return (
@@ -61,14 +49,14 @@ export default function LoginScreen({ route, navigation }) {
       </View>
       <View style={styles.imageContainer}>
         <Image
-          source={require("../../assets/image/Login.png")}
+          source={require("../../assets/image/SignUp.png")}
           style={styles.workingImage}
           resizeMode="contain"
         />
       </View>
       <View style={styles.loginFormContainer}>
         <View style={styles.loginTextContainer}>
-          <Text style={styles.loginText}>Sign In</Text>
+          <Text style={styles.loginText}>Sign up</Text>
         </View>
         <View style={styles.userInputContainer}>
           <View style={styles.iconContainer}>
@@ -90,6 +78,34 @@ export default function LoginScreen({ route, navigation }) {
             label="Password"
             value={password}
             onChangeText={(text) => setPassword(text)}
+            onBlur={()=>{
+              if ( password != '' && confirmPassword != '' && password != confirmPassword) {
+                setSignUpError('passwords do not match')
+              } else {
+                setSignUpError('')
+              }
+            }}
+          />
+        </View>
+        <View style={styles.userInputContainer}>
+          <View style={styles.iconContainer}>
+            <MaterialCommunityIcons name="lock" size={25} />
+          </View>
+          <TextInput
+            style={styles.userInputText}
+            label="Confirm password"
+            value={confirmPassword}
+            onChangeText={(text) => setConfirmPassword(text)}
+            onBlur={()=>{
+              if (password != confirmPassword) {
+                setSignUpError('passwords do not match')
+              } else {
+                setSignUpError('')
+              }
+            }}
+            onFocus={()=>{
+              setSignUpError('')
+            }}
           />
         </View>
         {/* <View>
@@ -103,37 +119,25 @@ export default function LoginScreen({ route, navigation }) {
           mode="contained-tonal"
           buttonColor={"#000"}
           textColor={"white"}
-          disabled={email == "" || password == ""}
+          disabled={email == "" || password == "" || confirmPassword == "" || signUpError == "passwords do not match" || password != confirmPassword}
           loading={loadingButton}
           onPress={() => {
-            onLoginButtonPressed();
+            onSignUpButtonPressed();
           }}
         >
-          Login
+          Sign up
         </Button>
         <View style={styles.loginErrorContainer}>
-          <Text style={styles.loginErrorText}>{loginError}</Text>
+          <Text style={styles.loginErrorText}>{signUpError}</Text>
         </View>
         <View style={styles.createNewAccountContainer}>
-          <Text style={{ color: "grey" }}>Don't have an account?</Text>
-          <TouchableOpacity onPress={()=>{navigation.navigate("Signup");}}>
-            <Text style={{ fontWeight: "bold" }}> Create new one</Text>
+          <Text style={{ color: "grey" }}>Already Have one?</Text>
+          <TouchableOpacity onPress={()=>{navigation.navigate("Login", {message: 'Lol'});}}>
+            <Text style={{ fontWeight: "bold" }}> Sign in</Text>
           </TouchableOpacity>
         </View>
       </View>
-      <Snackbar
-        visible={snackBarEnabled}
-        onDismiss={onDismissSnackBar}
-        action={{
-          label: "OK",
-          onPress: () => {
-            // Do something
-            setSnackBarEnabled(false);
-          },
-        }}
-      >
-        We've sent an email for varification!
-      </Snackbar>
+
       <StatusBar style="auto" />
     </View>
   );

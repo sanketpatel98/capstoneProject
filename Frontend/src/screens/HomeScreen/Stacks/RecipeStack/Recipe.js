@@ -19,6 +19,7 @@ import {
 } from "../../../../backendCalls/recipeData";
 import { CircleButton } from "../../../../components/CircleButton";
 import { addToCart } from "../../../../Redux/cartSlice";
+import { login } from "../../../../Redux/userDataSclice";
 import styles from "./style";
 
 export default function Recipe({ route, navigation }) {
@@ -29,9 +30,12 @@ export default function Recipe({ route, navigation }) {
     useState(true);
   const [requireIngredients, setRequireIngredients] = useState([]);
   const [snackBarEnabled, setSnackBarEnabled] = useState(false);
+  const [snackBarForFavourite, setSnackBarForFavourite] = useState(false);
+  const [snackBarForLogin, setSnackBarForLogin] = useState(false)
   const [recentIngredient, setRecentIngredient] = useState("");
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart.list);
+  const userState = useSelector((state) => state.user.userRef);
 
   useEffect(() => {
     // getting recipe(for readyInMinutes)
@@ -58,6 +62,14 @@ export default function Recipe({ route, navigation }) {
   useEffect(() => {
     setIngredientAvailability();
   }, [cart]);
+
+useEffect(()=>{
+  if (route.params) {
+    if (route.params.message == 'login sucessful') {
+      setSnackBarForLogin(true)
+    }
+  }
+},[route])
 
   const baseUrl = "https://spoonacular.com/cdn/ingredients_500x500/";
   const addIngredientToCart = (item) => {
@@ -152,6 +164,14 @@ export default function Recipe({ route, navigation }) {
     setSnackBarEnabled(false);
   };
 
+  const onDismissSnackBarFavourite = () => {
+    setSnackBarForFavourite(false);
+  };
+
+  const onDismissSnackBarLogin = () => {
+    setSnackBarForLogin(false);
+  };
+
   return (
     <>
       <ScrollView style={styles.container} nestedScrollEnabled={true}>
@@ -168,9 +188,13 @@ export default function Recipe({ route, navigation }) {
             <View style={styles.likeButton}>
               <CircleButton
                 imgUrl={heart}
-                handlePress={() =>
-                  navigation.navigate("Login")
-                }
+                handlePress={() => {
+                  if ("user" in userState) {
+                    setSnackBarForFavourite(true);
+                  } else {
+                    navigation.navigate("Login");
+                  }
+                }}
               ></CircleButton>
             </View>
             <View style={styles.backButton}>
@@ -261,6 +285,32 @@ export default function Recipe({ route, navigation }) {
       >
         {recentIngredient.charAt(0).toUpperCase() + recentIngredient.slice(1)}{" "}
         added!
+      </Snackbar>
+      <Snackbar
+        visible={snackBarForFavourite}
+        onDismiss={onDismissSnackBarFavourite}
+        action={{
+          label: "OK",
+          onPress: () => {
+            // Do something
+            setSnackBarForFavourite(false);
+          },
+        }}
+      >
+        Recipe added to Favourite Recipes!
+      </Snackbar>
+      <Snackbar
+        visible={snackBarForLogin}
+        onDismiss={onDismissSnackBarLogin}
+        action={{
+          label: "OK",
+          onPress: () => {
+            // Do something
+            onDismissSnackBarLogin(false);
+          },
+        }}
+      >
+        Login successful!
       </Snackbar>
     </>
   );

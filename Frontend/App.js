@@ -12,6 +12,7 @@ import SettingScreen from "./src/screens/SettingsScreen/SettingsScreen";
 import ShoppingCartScreen from "./src/screens/ShoppingCartScreen/ShoppingCartScreen";
 import NearByGroceryStoreScreen from "./src/screens/ShoppingCartScreen/Stacks/GroceryStore/NearByGroceryStoreScreen";
 import LoginScreen from "./src/screens/LoginScreen/LoginScreen";
+import SignupScreen from "./src/screens/SignupScreen/SignupScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -54,6 +55,11 @@ function App() {
         <Stack.Screen
           name="Login"
           component={LoginScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Signup"
+          component={SignupScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
