@@ -7,6 +7,11 @@ const {
   getRecipeById,
   getRecipeByCuisine,
 } = require("./spoonacularAPI");
+const {
+  addToFavourites,
+  removefromFavourites,
+  getFavouriteRecipes,
+} = require("./Firebase/favouriteRecipes");
 const app = express();
 const port = 3000;
 
@@ -95,10 +100,47 @@ app.post("/userSignIn", async (req, res) => {
       });
     })
     .catch((error) => {
-      console.log("Error");
+      console.log(error);
       // console.log(error.code);
       res.send(error);
     });
+});
+
+app.post("/addFavourite", async (req, res) => {
+  const recipeId = req.body.recipeId;
+  const uid = req.body.uid;
+  addToFavourites(recipeId, uid)
+    .then((response) => {
+      res.send({
+        response: { message: "Recipe added successfully!" },
+      });
+    })
+    .catch((error) => {
+      res.send(error);
+    });
+});
+
+app.post("/removeFavourite", async (req, res) => {
+  const recipeId = req.body.recipeId;
+  const uid = req.body.uid;
+  removefromFavourites(recipeId, uid)
+    .then((response) => {
+      res.send({
+        response: { message: "Recipe " + recipeId + " removed successfully!" },
+      });
+    })
+    .catch((error) => {
+      res.send(error);
+    });
+});
+
+app.post("/getAllFavourite", async (req, res) => {
+  const uid = req.body.uid;
+  console.log("From getAllFavouriteRecipes backend");
+  console.log(uid);
+  res.send({
+    response: await getFavouriteRecipes(uid),
+  });
 });
 
 app.listen(port, () => {

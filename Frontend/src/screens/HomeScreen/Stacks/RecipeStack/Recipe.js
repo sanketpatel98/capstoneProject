@@ -21,6 +21,11 @@ import { CircleButton } from "../../../../components/CircleButton";
 import { addToCart } from "../../../../Redux/cartSlice";
 import { login } from "../../../../Redux/userDataSclice";
 import styles from "./style";
+import {
+  addFavouriteRecipe,
+  removeFromFavouriteRecipe,
+} from "../../../../backendCalls/favouriteRecipe";
+import { addToFavourite, removeFromFavourite } from "../../../../Redux/favouriteRecipesSlice";
 
 export default function Recipe({ route, navigation }) {
   const [recipe, setRecipe] = useState({});
@@ -31,11 +36,13 @@ export default function Recipe({ route, navigation }) {
   const [requireIngredients, setRequireIngredients] = useState([]);
   const [snackBarEnabled, setSnackBarEnabled] = useState(false);
   const [snackBarForFavourite, setSnackBarForFavourite] = useState(false);
-  const [snackBarForLogin, setSnackBarForLogin] = useState(false)
+  const [snackBarForLogin, setSnackBarForLogin] = useState(false);
   const [recentIngredient, setRecentIngredient] = useState("");
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart.list);
   const userState = useSelector((state) => state.user.userRef);
+  const favourtieList = useSelector((state) => state.favourite.list);
+  const [favouriteStatus, setFavouriteStatus] = useState("");
 
   useEffect(() => {
     // getting recipe(for readyInMinutes)
@@ -63,13 +70,13 @@ export default function Recipe({ route, navigation }) {
     setIngredientAvailability();
   }, [cart]);
 
-useEffect(()=>{
-  if (route.params) {
-    if (route.params.message == 'login sucessful') {
-      setSnackBarForLogin(true)
+  useEffect(() => {
+    if (route.params) {
+      if (route.params.message == "login sucessful") {
+        setSnackBarForLogin(true);
+      }
     }
-  }
-},[route])
+  }, [route]);
 
   const baseUrl = "https://spoonacular.com/cdn/ingredients_500x500/";
   const addIngredientToCart = (item) => {
@@ -172,6 +179,33 @@ useEffect(()=>{
     setSnackBarForLogin(false);
   };
 
+  const favouriteButtonPressed = () => {
+    if ("user" in userState) {
+      if (favourtieList.includes(route.params.item.id)) {
+        removeFromFavouriteRecipe(
+          route.params.item.id,
+          userState.user.uid
+        ).then(() => {
+          setFavouriteStatus('deleted from')
+          setSnackBarForFavourite(true);
+          dispatch(removeFromFavourite(route.params.item.id));
+        });
+      } else {
+        addFavouriteRecipe(route.params.item.id, userState.user.uid)
+        .then(() => {
+          setFavouriteStatus('added to')
+          setSnackBarForFavourite(true);
+          dispatch(addToFavourite(route.params.item.id));
+        })
+        .catch(() => {
+          console.log("Not able to add recipe");
+        });
+      }
+    } else {
+      navigation.navigate("Login");
+    }
+  }
+
   return (
     <>
       <ScrollView style={styles.container} nestedScrollEnabled={true}>
@@ -189,11 +223,7 @@ useEffect(()=>{
               <CircleButton
                 imgUrl={heart}
                 handlePress={() => {
-                  if ("user" in userState) {
-                    setSnackBarForFavourite(true);
-                  } else {
-                    navigation.navigate("Login");
-                  }
+                  favouriteButtonPressed()
                 }}
               ></CircleButton>
             </View>
@@ -297,7 +327,7 @@ useEffect(()=>{
           },
         }}
       >
-        Recipe added to Favourite Recipes!
+        Recipe {favouriteStatus} Favourite Recipes!
       </Snackbar>
       <Snackbar
         visible={snackBarForLogin}

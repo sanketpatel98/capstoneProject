@@ -10,6 +10,8 @@ import { userSignIn } from "../../backendCalls/user";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../Redux/userDataSclice";
 import { Snackbar } from "react-native-paper";
+import { getAllFavouriteRecipes } from "../../backendCalls/favouriteRecipe";
+import { setFavourite } from "../../Redux/favouriteRecipesSlice";
 
 export default function LoginScreen({ route, navigation }) {
   const [email, setEmail] = useState("");
@@ -25,6 +27,9 @@ export default function LoginScreen({ route, navigation }) {
       .then((userRef) => {
         if (userRef.data.response) {
           if (userRef.data.response.user.emailVerified) {
+            getAllFavouriteRecipes(userRef.data.response.user.uid).then((response)=>{
+              dispatch(setFavourite(response.data.response))
+            })
             dispatch(login(userRef.data.response));
             navigation.goBack();
           } else {

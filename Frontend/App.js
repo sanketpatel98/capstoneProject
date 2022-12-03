@@ -13,6 +13,7 @@ import ShoppingCartScreen from "./src/screens/ShoppingCartScreen/ShoppingCartScr
 import NearByGroceryStoreScreen from "./src/screens/ShoppingCartScreen/Stacks/GroceryStore/NearByGroceryStoreScreen";
 import LoginScreen from "./src/screens/LoginScreen/LoginScreen";
 import SignupScreen from "./src/screens/SignupScreen/SignupScreen";
+import FavouriteScreen from "./src/screens/FavouriteScreen/FavouriteScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -29,6 +30,7 @@ export default AppWrapper = () => {
 
 function App() {
   const cart = useSelector((state) => state.cart.list);
+  
   const MyTheme = {
     ...DefaultTheme,
     colors: {
@@ -100,13 +102,13 @@ function App() {
         />
         <Tab.Screen
           name="Search"
-          component={SearchScreen}
+          component={FavouriteScreen}
           options={{
             headerShown: false,
-            tabBarLabel: "Search",
+            tabBarLabel: "Favourite",
             tabBarIcon: ({ color, size }) => (
               <MaterialCommunityIcons
-                name="magnify"
+                name="heart"
                 color={color}
                 size={size}
               />
