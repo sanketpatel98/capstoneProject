@@ -7,11 +7,11 @@ import {
   Text,
   TouchableOpacity,
   View,
-  ScrollView
+  ScrollView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
-import { 
+import {
   getRecipebyPantry,
   getRecipeByCuisine,
 } from "../../backendCalls/recipeData";
@@ -51,15 +51,23 @@ export default function HomeScreen({ navigation }) {
     const cuisines = ["Indian", "Chinese", "Mexican", "Greek", "Thai"];
     var cuisinePromises = [];
     cuisines.forEach((cuisine) => {
-      cuisinePromises.push(getRecipeByCuisine(cuisine).then((response)=>{return response}));
+      cuisinePromises.push(
+        getRecipeByCuisine(cuisine).then((response) => {
+          return response;
+        })
+      );
     });
-    Promise.all(cuisinePromises).then((values)=>{
-      setRecipesByCuisine(values.map((value)=>{
-        return {results:value.recipes.results, cuisine:value.cuisine}
-      }))
-    }).catch((err)=>{
-      console.log(err);
-    })
+    Promise.all(cuisinePromises)
+      .then((values) => {
+        setRecipesByCuisine(
+          values.map((value) => {
+            return { results: value.recipes.results, cuisine: value.cuisine };
+          })
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
   const renderItems = ({ item }) => (
@@ -106,15 +114,22 @@ export default function HomeScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       {appReady && (
-        <ScrollView style={styles.mainContainer} showsVerticalScrollIndicator={false}>
+        <ScrollView
+          style={styles.mainContainer}
+          showsVerticalScrollIndicator={false}
+        >
           <View style={styles.topContainer}>
             <Image
               source={require("../../assets/image/topIcon.png")}
               style={styles.topIcon}
             />
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("Favourite");
+              }}
+            >
               <Image
-                source={require("../../assets/image/settings-black.png")}
+                source={require("../../assets/image/heart.png")}
                 style={styles.topIcon}
               />
             </TouchableOpacity>

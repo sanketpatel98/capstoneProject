@@ -64,6 +64,11 @@ function App() {
           component={SignupScreen}
           options={{ headerShown: false }}
         />
+        <Stack.Screen
+          name="Favourite"
+          component={FavouriteScreen}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     );
   }
@@ -97,21 +102,6 @@ function App() {
             tabBarLabel: "Home",
             tabBarIcon: ({ color, size }) => (
               <MaterialCommunityIcons name="home" color={color} size={size} />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Search"
-          component={FavouriteScreen}
-          options={{
-            headerShown: false,
-            tabBarLabel: "Favourite",
-            tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons
-                name="heart"
-                color={color}
-                size={size}
-              />
             ),
           }}
         />

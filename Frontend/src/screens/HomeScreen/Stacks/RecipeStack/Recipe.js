@@ -73,8 +73,6 @@ export default function Recipe({ route, navigation }) {
 
   useEffect(() => {
     setIngredientAvailability();
-    console.log("Cart => ");
-    console.log(cart);
   }, [cart]);
 
   useEffect(() => {
@@ -92,9 +90,6 @@ export default function Recipe({ route, navigation }) {
   const baseUrl = "https://spoonacular.com/cdn/ingredients_500x500/";
   const addIngredientToCart = (item) => {
     if (!cart.includes(item)) {
-      console.log("++++++++++++++++++++++++++++++++++++++++++++++++++");
-      console.log(item);
-      console.log("++++++++++++++++++++++++++++++++++++++++++++++++++");
       dispatch(addToCart({ id: item.id, name: item.name }));
       setRecentIngredient(item.name);
       setSnackBarEnabled(true);
@@ -150,32 +145,21 @@ export default function Recipe({ route, navigation }) {
   );
 
   const setIngredientAvailability = () => {
-    // var usedIngredientsFiltered = recipe.
-
-    // console.log("Comes here");
-    // console.log(recipe);
-
     if (
       recipe &&
       Object.keys(recipe).length !== 0
-      // Object.getPrototypeOf(recipe) === Object.prototype
     ) {
-      // }
-
-      // if (recipe) {
-      // console.log(recipe.extendedIngredients);
       var requiredIngredients = [];
       recipe.extendedIngredients.forEach((element) => {
         requiredIngredients.push(
           (({ name, image, id }) => ({ name, image, id }))(element)
         );
       });
-      // console.log(requireIngredients);
+      
       var usedIngredientsFiltered = requiredIngredients.filter((ingredient) => {
         var tf = false;
         pantry.forEach((item) => {
           if (ingredient.id == item[1]) {
-            // console.log("True hurrey");
             tf = true;
           }
         });
@@ -187,7 +171,6 @@ export default function Recipe({ route, navigation }) {
           var tf = true;
           pantry.forEach((item) => {
             if (ingredient.id == item[1]) {
-              // console.log("True hurrey");
               tf = false;
             }
           });
@@ -207,14 +190,6 @@ export default function Recipe({ route, navigation }) {
 
         return updatedElement;
       });
-      console.log(
-        "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
-      );
-      console.log(updatedUsedIngredient);
-      console.log(updatedmissedIngredient);
-      console.log(
-        "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
-      );
       setRequireIngredients(
         updatedUsedIngredient.concat(updatedmissedIngredient)
       );
