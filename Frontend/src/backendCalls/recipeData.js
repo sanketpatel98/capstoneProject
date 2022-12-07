@@ -35,6 +35,16 @@ return axios
   });
 };
 
+export const getIngredientById = (id) => {
+  // recipeById
+return axios
+  .get(`${API_URL}/ingredientById?id=${id}`)
+  .then((response) => response.data.response)
+  .catch((error) => {
+    console.log(error);
+  });
+};
+
 export const getRecipeByCuisine = (cuisine) => {
   // recipeByCuisine
 return axios

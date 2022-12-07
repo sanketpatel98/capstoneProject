@@ -16,6 +16,7 @@ import back from "../../../../assets/image/left.png";
 import {
   getRecipeById,
   getRecipeInstructionById,
+  getIngredientById
 } from "../../../../backendCalls/recipeData";
 import { CircleButton } from "../../../../components/CircleButton";
 import { addToCart } from "../../../../Redux/cartSlice";
@@ -48,28 +49,61 @@ export default function Recipe({ route, navigation }) {
   const favourtieList = useSelector((state) => state.favourite.list);
   const [favouriteStatus, setFavouriteStatus] = useState("");
 
-  useEffect(() => {
-    // getting recipe(for readyInMinutes)
+  // useEffect(() => {
+  //   // getting recipe(for readyInMinutes)
+  //   fetchData();
+  // }, []);
 
-    getRecipeById(route.params.item.id)
-      .then((res) => {
-        setReadyInMinutes(res.readyInMinutes);
-        setRecipe(res);
-        // setIngredientAvailability();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  useEffect(()=>{
+fetchData();
+  },[route.params])
 
-    // getting instructions
-    getRecipeInstructionById(route.params.item.id)
-      .then((res) => {
-        setRecipeInstructions(res);
-      })
-      .catch((error) => {
-        console.log(error);
+  function fetchData() {
+    if (route.params.item.id.length > 15) {
+      var extendedIngredientsWithImage = []
+      var allPromises = []
+      route.params.item.extendedIngredients.forEach((element) => {
+        var result = getIngredientById(element.id).then((res)=>{
+          console.log(res.image);
+          extendedIngredientsWithImage.push({id:element.id, name:element.name, image:res.image})
+        }).catch((err)=>{
+          console.log(err);
+        })  
+        allPromises.push(result)
       });
-  }, []);
+      Promise.all(allPromises).then(()=>{
+        var updatedRecipe = JSON.parse(JSON.stringify(route.params.item))
+        console.log(updatedRecipe);
+        updatedRecipe.extendedIngredients = extendedIngredientsWithImage
+        setRecipe(updatedRecipe);
+        setReadyInMinutes(route.params.item.readyInMinutes);
+        setRecipeInstructions(route.params.item.instructions);
+      }).catch((err)=>{
+        console.log(err);
+      })
+      
+    } else {
+      getRecipeById(route.params.item.id)
+        .then((res) => {
+          setReadyInMinutes(res.readyInMinutes);
+          console.log(res.image);
+          setRecipe(res);
+          // setIngredientAvailability();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+      // getting instructions
+      getRecipeInstructionById(route.params.item.id)
+        .then((res) => {
+          setRecipeInstructions(res);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }
 
   useEffect(() => {
     setIngredientAvailability();
@@ -89,8 +123,8 @@ export default function Recipe({ route, navigation }) {
 
   const baseUrl = "https://spoonacular.com/cdn/ingredients_500x500/";
   const addIngredientToCart = (item) => {
-    if (!cart.includes(item)) {
-      dispatch(addToCart({ id: item.id, name: item.name }));
+    if (!cart.some(ing => ing.id === item.id)) {
+      dispatch(addToCart(item));
       setRecentIngredient(item.name);
       setSnackBarEnabled(true);
     }
@@ -125,7 +159,7 @@ export default function Recipe({ route, navigation }) {
             }}
           >
             {/* {cart.includes( {id: item.id, name:item.name} ) ? ( */}
-            {cart.some(e => e.id === item.id) ? (
+            {cart.some((e) => e.id === item.id) ? (
               <MaterialCommunityIcons
                 name="cart-check"
                 color={"green"}
@@ -145,17 +179,14 @@ export default function Recipe({ route, navigation }) {
   );
 
   const setIngredientAvailability = () => {
-    if (
-      recipe &&
-      Object.keys(recipe).length !== 0
-    ) {
+    if (recipe && Object.keys(recipe).length !== 0) {
       var requiredIngredients = [];
       recipe.extendedIngredients.forEach((element) => {
         requiredIngredients.push(
           (({ name, image, id }) => ({ name, image, id }))(element)
         );
       });
-      
+
       var usedIngredientsFiltered = requiredIngredients.filter((ingredient) => {
         var tf = false;
         pantry.forEach((item) => {
@@ -242,7 +273,7 @@ export default function Recipe({ route, navigation }) {
         <View>
           <View style={styles.recipeImageView}>
             <ImageBackground
-              source={{ uri: route.params.item.image }}
+              source={{ uri: recipe.image }} //route.params.item.image
               style={styles.recipeImageBackground}
               resizeMode="cover"
             />
@@ -266,7 +297,8 @@ export default function Recipe({ route, navigation }) {
           <View style={styles.recipeDescriptionView}>
             <View style={styles.recipeDescriptionTitleView}>
               <Text numberOfLines={3} style={styles.recipeDescriptionTitleText}>
-                {route.params.item.title}
+                {/* {route.params.item.title} */}
+                {recipe.title}
               </Text>
               <Text style={styles.preprationTimeText}>
                 Time to prepare: {readyInMinutes} Minutes

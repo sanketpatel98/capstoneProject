@@ -14,6 +14,8 @@ import NearByGroceryStoreScreen from "./src/screens/ShoppingCartScreen/Stacks/Gr
 import LoginScreen from "./src/screens/LoginScreen/LoginScreen";
 import SignupScreen from "./src/screens/SignupScreen/SignupScreen";
 import FavouriteScreen from "./src/screens/FavouriteScreen/FavouriteScreen";
+import MyRecipesScreen from "./src/screens/MyRecipesScreen/MyRecipesScreen";
+import AddNewRecipeScreen from "./src/screens/AddNewRecipeScreen/AddNewRecipeScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -90,6 +92,23 @@ function App() {
     );
   }
 
+  function MyRecipesStackScreen() {
+    return (
+      <Stack.Navigator>
+        <Stack.Screen
+          name="MyRecipes"
+          component={MyRecipesScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="AddNewRecipe"
+          component={AddNewRecipeScreen}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
+    );
+  }
+
   return (
     // <Provider store={store}>
     <NavigationContainer theme={MyTheme}>
@@ -102,6 +121,21 @@ function App() {
             tabBarLabel: "Home",
             tabBarIcon: ({ color, size }) => (
               <MaterialCommunityIcons name="home" color={color} size={size} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="MyRecipesStackScreen"
+          component={MyRecipesStackScreen}
+          options={{
+            headerShown: false,
+            tabBarLabel: "My Recipes",
+            tabBarIcon: ({ color, size }) => (
+              <MaterialCommunityIcons
+                name="food-variant"
+                color={color}
+                size={size}
+              />
             ),
           }}
         />

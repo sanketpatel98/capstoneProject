@@ -37,8 +37,9 @@ export default function HomeScreen({ navigation }) {
 
   useEffect(() => {
     getRecipebyPantry([
-      ["acorn squash", 11482],
-      ["adobo sauce", 6979],
+      ["lasagna noodles", 10620420],
+      ["pizza crust", 93770],
+      ["pizza mix", 98924],
     ])
       .then((response) => {
         setPopularRecipes(response);
