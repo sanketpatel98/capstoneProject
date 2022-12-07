@@ -2,6 +2,7 @@
 const {initializeApp} = require("firebase/app");
 const {getAuth} = require("firebase/auth");
 const { getDatabase } = require('firebase/database')
+const { getStorage } = require('firebase/storage')
 
 const firebaseConfig = {
   apiKey: "AIzaSyCBDJg03urd90c0SSzZ4aZcPmIKoxGx2AE",
@@ -17,12 +18,14 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const googleStorage = getStorage(app)
 
 var dbRef = getDatabase()
-console.log(dbRef);
+// console.log(dbRef);
 module.exports = {
   auth: auth,
-  database: dbRef
+  database: dbRef,
+  googleStorage: googleStorage
 };
 
 // const analytics = getAnalytics(app);

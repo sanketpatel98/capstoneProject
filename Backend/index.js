@@ -6,12 +6,14 @@ const {
   getRecipesInstructionById,
   getRecipeById,
   getRecipeByCuisine,
+  getIngredientById
 } = require("./spoonacularAPI");
 const {
   addToFavourites,
   removefromFavourites,
   getFavouriteRecipes,
 } = require("./Firebase/favouriteRecipes");
+const { addToCustomRecipes, removefromCustomRecipes } = require("./Firebase/customRecipeStorage");
 const app = express();
 const port = 3000;
 
@@ -64,6 +66,18 @@ app.get("/recipesInstructionById", async (req, res) => {
   });
 });
 
+app.get("/ingredientById", async (req, res) => {
+  if (req.query.id) {
+    getIngredientById(req.query.id).then((response) => {
+      res.send({
+        response: response,
+      });
+    });
+  } else {
+    res.status(400).send("SERVER RESPONSE => Id not found in the query param");
+  }
+});
+
 app.get("/recipeById", async (req, res) => {
   if (req.query.id) {
     getRecipeById(req.query.id).then((response) => {
@@ -106,6 +120,7 @@ app.post("/userSignIn", async (req, res) => {
     });
 });
 
+//Favourite Recipes
 app.post("/addFavourite", async (req, res) => {
   const recipeId = req.body.recipeId;
   const uid = req.body.uid;
@@ -141,6 +156,35 @@ app.post("/getAllFavourite", async (req, res) => {
   res.send({
     response: await getFavouriteRecipes(uid),
   });
+});
+
+//Custom recipes
+app.post("/addCustomRecipe", async (req, res) => {
+  const customRecipe = req.body.customRecipe;
+  const uid = req.body.uid;
+  addToCustomRecipes(customRecipe, uid)
+    .then((response) => {
+      res.send({
+        response: { message: "Custom recipe added successfully!" },
+      });
+    })
+    .catch((error) => {
+      res.send(error);
+    });
+});
+
+app.post("/removeCustom", async (req, res) => {
+  const recipeId = req.body.recipeId;
+  const uid = req.body.uid;
+  removefromCustomRecipes(recipeId, uid)
+    .then((response) => {
+      res.send({
+        response: { message: "Recipe " + recipeId + " removed successfully!" },
+      });
+    })
+    .catch((error) => {
+      res.send(error);
+    });
 });
 
 app.listen(port, () => {

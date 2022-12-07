@@ -3,21 +3,22 @@ const { ref, set, get, push, remove } = require("firebase/database");
 
 const path = "https://capstone-project-8ea89-default-rtdb.firebaseio.com";
 
-const addToFavourites = async (recipeId, uid) => {
+const addToCustomRecipes = async (recipe, uid) => {
   //   ref("favouriteRecipes")
-  return set(push(ref(database, `users/${uid}/favouriteRecipes/`)), {
-    recipeId: recipeId,
+  return set(push(ref(database, `customRecipes/`)), {
+    recipe: recipe,
+    uid: uid
   });
 };
 
-const removefromFavourites = async (recipeId, uid) => {
-  var queryRef = ref(database, `users/${uid}/favouriteRecipes/`);
+const removefromCustomRecipes = async (recipeId, uid) => {
+  var queryRef = ref(database, `customRecipes/`);
   get(queryRef).then((snapshot) => {
     var data = snapshot.val();
     if (snapshot.exists()) {
       for (let key in data) {
-        if (data[key].recipeId == recipeId) {
-          remove(ref(database, `users/${uid}/favouriteRecipes/${key}`))
+        if (data[key].uid == uid && data[key].recipe.id == recipeId) {
+          remove(ref(database, `customRecipes/${key}`))
             .then(() => {})
             .catch((err) => {
               console.log("Error:" + error);
@@ -28,8 +29,8 @@ const removefromFavourites = async (recipeId, uid) => {
   });
 };
 
-const getFavouriteRecipes = async (uid) => {
-  var queryRef = ref(database, `users/${uid}/favouriteRecipes/`);
+const getCustomRecipesByUid = async (uid) => {
+  var queryRef = ref(database, `customRecipes/`);
   var responseData = [];
   await get(queryRef).then((snapshot) => {
     var data = snapshot.val();
@@ -44,7 +45,7 @@ const getFavouriteRecipes = async (uid) => {
 };
 
 module.exports = {
-  addToFavourites: addToFavourites,
-  removefromFavourites: removefromFavourites,
-  getFavouriteRecipes: getFavouriteRecipes,
+  addToCustomRecipes: addToCustomRecipes,
+  removefromCustomRecipes: removefromCustomRecipes,
+  getCustomRecipesByUid: getCustomRecipesByUid,
 };
