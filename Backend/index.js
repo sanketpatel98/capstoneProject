@@ -13,7 +13,7 @@ const {
   removefromFavourites,
   getFavouriteRecipes,
 } = require("./Firebase/favouriteRecipes");
-const { addToCustomRecipes, removefromCustomRecipes } = require("./Firebase/customRecipeStorage");
+const { addToCustomRecipes, removefromCustomRecipes, getCustomRecipesById } = require("./Firebase/customRecipeStorage");
 const app = express();
 const port = 3000;
 
@@ -81,6 +81,18 @@ app.get("/ingredientById", async (req, res) => {
 app.get("/recipeById", async (req, res) => {
   if (req.query.id) {
     getRecipeById(req.query.id).then((response) => {
+      res.send({
+        response: response,
+      });
+    });
+  } else {
+    res.status(400).send("SERVER RESPONSE => Id not found in the query param");
+  }
+});
+
+app.get("/customRecipeById", async (req, res) => {
+  if (req.query.id) {
+    getCustomRecipesById(req.query.id).then((response) => {
       res.send({
         response: response,
       });

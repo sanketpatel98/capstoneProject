@@ -92,8 +92,13 @@ const extendedIngredientsArray = []
       extendedIngredientsArray.push({name:element[0], id:element[1]})
     });
 
+const newTime = () => {
+  currentTime = Date().toString().replaceAll(' ','')
+  return currentTime
+}
+
     const customRecipe = {
-      id: userRef.user.uid + Date().toString(),
+      id: userRef.user.uid + newTime(),
       title: recipeName,
       readyInMinutes: cookingTime,
       extendedIngredients: extendedIngredientsArray,
@@ -395,9 +400,9 @@ const extendedIngredientsArray = []
               },
             }}
           >
-            {recentIngredient.charAt(0).toUpperCase() +
+            <Text style={{color: 'white'}}>{recentIngredient.charAt(0).toUpperCase() +
               recentIngredient.slice(1)}{" "}
-            added!
+            added!</Text>
           </Snackbar>
         </View>
       )}

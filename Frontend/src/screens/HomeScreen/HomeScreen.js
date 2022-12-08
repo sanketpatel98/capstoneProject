@@ -15,6 +15,7 @@ import {
   getRecipebyPantry,
   getRecipeByCuisine,
 } from "../../backendCalls/recipeData";
+import { getCustomRecipeById } from "../../backendCalls/customRecipes";
 import styles from "./style";
 
 export default function HomeScreen({ navigation }) {
@@ -22,7 +23,22 @@ export default function HomeScreen({ navigation }) {
   const [popularRecipes, setPopularRecipes] = useState([]);
   const [recipesByCuisine, setRecipesByCuisine] = useState([]);
   const pantry = useSelector((state) => state.pantry.list);
+  const deeplinkId = useSelector((state) => state.deeplink.id);
   const [appReady, setAppReady] = useState(false);
+
+  useEffect(() => {
+    console.log("Log from home screen");
+    console.log(deeplinkId);
+
+    if (deeplinkId.length > 10) {
+      getCustomRecipeById(deeplinkId).then((res) => {
+        navigation.navigate("Recipe", {
+          item: res,
+        });
+      });
+    }
+  }, [deeplinkId]);
+
   useEffect(() => {
     // pantry.toString()
 
@@ -49,7 +65,7 @@ export default function HomeScreen({ navigation }) {
         console.log(err);
       });
 
-    const cuisines = ["Indian", "Chinese", "Mexican", "Greek", "Thai"];
+    const cuisines = ["Indian"]//, "Chinese", "Mexican", "Greek", "Thai"];
     var cuisinePromises = [];
     cuisines.forEach((cuisine) => {
       cuisinePromises.push(

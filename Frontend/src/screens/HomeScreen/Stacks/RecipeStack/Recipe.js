@@ -374,8 +374,11 @@ fetchData();
           },
         }}
       >
+        <Text style={{color: 'white'}}>
         {recentIngredient.charAt(0).toUpperCase() + recentIngredient.slice(1)}{" "}
         added!
+        </Text>
+        
       </Snackbar>
       <Snackbar
         visible={snackBarForFavourite}
@@ -388,7 +391,10 @@ fetchData();
           },
         }}
       >
+        <Text style={{color: 'white'}}>
         Recipe {favouriteStatus} Favourite Recipes!
+        </Text>
+        
       </Snackbar>
       <Snackbar
         visible={snackBarForLogin}
@@ -401,7 +407,10 @@ fetchData();
           },
         }}
       >
+        <Text style={{color: 'white'}}>
         Login successful!
+        </Text>
+        
       </Snackbar>
     </>
   );

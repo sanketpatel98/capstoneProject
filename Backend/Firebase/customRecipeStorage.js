@@ -29,15 +29,17 @@ const removefromCustomRecipes = async (recipeId, uid) => {
   });
 };
 
-const getCustomRecipesByUid = async (uid) => {
+const getCustomRecipesById = async (id) => {
   var queryRef = ref(database, `customRecipes/`);
-  var responseData = [];
+  var responseData = "Lol";
   await get(queryRef).then((snapshot) => {
     var data = snapshot.val();
     if (snapshot.exists()) {
       for (let key in data) {
-        console.log(data[key].recipeId);
-        responseData.push(data[key].recipeId);
+        if (data[key].recipe.id == id) {
+          responseData = data[key].recipe
+          return responseData
+        }
       }
     }
   });
@@ -47,5 +49,5 @@ const getCustomRecipesByUid = async (uid) => {
 module.exports = {
   addToCustomRecipes: addToCustomRecipes,
   removefromCustomRecipes: removefromCustomRecipes,
-  getCustomRecipesByUid: getCustomRecipesByUid,
+  getCustomRecipesById: getCustomRecipesById,
 };

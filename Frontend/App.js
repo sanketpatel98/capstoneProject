@@ -2,7 +2,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { Provider, useSelector } from "react-redux";
+import { Provider, useSelector, useDispatch } from "react-redux";
 import { store } from "./src/Redux/store";
 import HomeScreen from "./src/screens/HomeScreen/HomeScreen";
 import Recipe from "./src/screens/HomeScreen/Stacks/RecipeStack/Recipe";
@@ -16,6 +16,10 @@ import SignupScreen from "./src/screens/SignupScreen/SignupScreen";
 import FavouriteScreen from "./src/screens/FavouriteScreen/FavouriteScreen";
 import MyRecipesScreen from "./src/screens/MyRecipesScreen/MyRecipesScreen";
 import AddNewRecipeScreen from "./src/screens/AddNewRecipeScreen/AddNewRecipeScreen";
+import * as Linking from "expo-linking";
+import { useEffect, useState } from "react";
+import { Text, View } from "react-native";
+import { changeId } from "./src/Redux/deeplinkSlice";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -23,16 +27,59 @@ const Tab = createBottomTabNavigator();
 export default AppWrapper = () => {
   // const store = createStore(rootReducer);
 
+  const [data, setData] = useState(null);
+  const [id, setId] = useState('')
+  const handleDeeplink = (event) => {
+    let data = Linking.parse(event.url);
+    setData(data);
+  };
+
+  useEffect(() => {
+    if (data) {
+      const param = data.queryParams
+      // console.log(param);
+      if (param.id) {
+        setId(param.id)
+      }
+      // console.log();
+    } else {
+      console.log("App not opened from deep link");
+    }
+  }, [data]);
+
+  useEffect(() => {
+    async function getInitialURL() {
+      const initialURL = await Linking.getInitialURL();
+      if (initialURL) {
+        setData(Linking.parse(initialURL));
+      }
+    }
+
+    Linking.addEventListener("url", handleDeeplink);
+    if (!data) {
+      getInitialURL();
+    }
+    return () => {
+      Linking.removeEventListener("url");
+    };
+  }, []);
+
   return (
     <Provider store={store}>
-      <App />
+      <App id={id}/>
     </Provider>
   );
 };
 
-function App() {
+function App({id}) {
   const cart = useSelector((state) => state.cart.list);
-  
+  const dispatch = useDispatch();
+
+  useEffect(()=>{
+    // console.log("Id has been changed!" + id);
+    dispatch(changeId(id))
+  },[id])
+
   const MyTheme = {
     ...DefaultTheme,
     colors: {
@@ -50,6 +97,7 @@ function App() {
           name="Home"
           component={HomeScreen}
           options={{ headerShown: false }}
+          //initialParams={{id:id}}
         />
         <Stack.Screen
           name="Recipe"
