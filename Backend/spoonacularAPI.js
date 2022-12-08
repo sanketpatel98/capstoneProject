@@ -12,7 +12,6 @@ const API_KEYS = [
   "dfdf52e9cd3f4b959aedbc8375edb361",
   "dd1b887d29104959b05f30f1abc0d3a0",
 
-
   "7b6f91eab8184d10aa0dd7bd6c1e6191",
   "7f4523feb8fb437f9d3332517567974c",
   "108301908c134907af3370904d8332b4",
@@ -30,7 +29,10 @@ const getRecipesByPantry = async (ingredients) => {
   const API_KEY = API_KEYS[API_KEY_SELECTOR];
   return await axios
     .get(
-      `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredients}&apiKey=${API_KEY}`
+      `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredients}&apiKey=${API_KEY}`,
+      {
+        headers: { "Accept-Encoding": "gzip,deflate,compress" },
+      }
     )
     .then((response) => {
       return response.data;
@@ -53,7 +55,10 @@ const getRecipesInstructionById = async (id) => {
   const API_KEY = API_KEYS[API_KEY_SELECTOR];
   return await axios
     .get(
-      `https://api.spoonacular.com/recipes/${id}/analyzedInstructions?apiKey=${API_KEY}`
+      `https://api.spoonacular.com/recipes/${id}/analyzedInstructions?apiKey=${API_KEY}`,
+      {
+        headers: { "Accept-Encoding": "gzip,deflate,compress" },
+      }
     )
     .then((response) => {
       return response.data;
@@ -76,7 +81,10 @@ const getRecipeById = async (id) => {
   const API_KEY = API_KEYS[API_KEY_SELECTOR];
   return await axios
     .get(
-      `https://api.spoonacular.com/recipes/${id}/information?includeNutrition=false&apiKey=${API_KEY}`
+      `https://api.spoonacular.com/recipes/${id}/information?includeNutrition=false&apiKey=${API_KEY}`,
+      {
+        headers: { "Accept-Encoding": "gzip,deflate,compress" },
+      }
     )
     .then((response) => {
       return response.data;
@@ -99,7 +107,10 @@ const getIngredientById = async (id) => {
   const API_KEY = API_KEYS[API_KEY_SELECTOR];
   return await axios
     .get(
-      `https://api.spoonacular.com/food/ingredients/${id}/information?apiKey=${API_KEY}`
+      `https://api.spoonacular.com/food/ingredients/${id}/information?apiKey=${API_KEY}`,
+      {
+        headers: { "Accept-Encoding": "gzip,deflate,compress" },
+      }
     )
     .then((response) => {
       return response.data;
@@ -120,15 +131,15 @@ const getIngredientById = async (id) => {
 
 const getRecipeByCuisine = async (cuisine) => {
   const API_KEY = API_KEYS[API_KEY_SELECTOR];
+  const url = `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&number=10&cuisine=${cuisine}`;
   return await axios
-    .get(
-      `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&number=10&cuisine=${cuisine}`
-    )
+    .get(url, {
+      headers: { "Accept-Encoding": "gzip,deflate,compress" },
+    })
     .then((response) => {
       return response.data;
     })
     .catch(async (err) => {
-      console.log(err.message);
       if (err.message == "Request failed with status code 402") {
         API_KEY_SELECTOR++;
         if (API_KEY_SELECTOR >= API_KEYS.length) {
