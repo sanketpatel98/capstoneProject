@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
       // justifyContent: 'center',
       backgroundColor: "#9AB8BA",
       width: Dimensions.get('window').width,
+      marginTop: 15
     },
     titleBarContainer:{
       flexDirection: 'row',

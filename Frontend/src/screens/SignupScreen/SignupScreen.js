@@ -1,5 +1,5 @@
 import styles from "./style";
-import { Text, View, Image, TouchableOpacity } from "react-native";
+import { Text, View, Image, TouchableOpacity, ScrollView } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { CircleButton } from "../../components/CircleButton";
 import back from "../../assets/image/left.png";
@@ -13,9 +13,10 @@ import { login } from "../../Redux/userDataSclice";
 export default function SignupScreen({ route, navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [loadingButton, setLoadingButton] = useState(false);
   const [signUpError, setSignUpError] = useState("");
+  const [passwordSecure, setPasswordSecure] = useState(true)
 
   const dispatch = useDispatch();
 
@@ -25,7 +26,7 @@ export default function SignupScreen({ route, navigation }) {
       .then((userRef) => {
         console.log(userRef.data);
         if (userRef.data.userCred) {
-          navigation.navigate("Login", {message: 'verify email'});
+          navigation.navigate("Login", { message: "verify email" });
         } else {
           if (userRef.data.code == "auth/weak-password") {
             setSignUpError("Please enter strong password");
@@ -40,7 +41,7 @@ export default function SignupScreen({ route, navigation }) {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.likeButton}>
         <CircleButton
           imgUrl={back}
@@ -76,13 +77,19 @@ export default function SignupScreen({ route, navigation }) {
           <TextInput
             style={styles.userInputText}
             label="Password"
+            secureTextEntry={passwordSecure}
+            right={<TextInput.Icon icon="eye" onPress={()=>{setPasswordSecure(!passwordSecure)}}/>}
             value={password}
             onChangeText={(text) => setPassword(text)}
-            onBlur={()=>{
-              if ( password != '' && confirmPassword != '' && password != confirmPassword) {
-                setSignUpError('passwords do not match')
+            onBlur={() => {
+              if (
+                password != "" &&
+                confirmPassword != "" &&
+                password != confirmPassword
+              ) {
+                setSignUpError("passwords do not match");
               } else {
-                setSignUpError('')
+                setSignUpError("");
               }
             }}
           />
@@ -95,16 +102,18 @@ export default function SignupScreen({ route, navigation }) {
             style={styles.userInputText}
             label="Confirm password"
             value={confirmPassword}
+            secureTextEntry={passwordSecure}
+            right={<TextInput.Icon icon="eye" onPress={()=>{setPasswordSecure(!passwordSecure)}}/>}
             onChangeText={(text) => setConfirmPassword(text)}
-            onBlur={()=>{
+            onBlur={() => {
               if (password != confirmPassword) {
-                setSignUpError('passwords do not match')
+                setSignUpError("passwords do not match");
               } else {
-                setSignUpError('')
+                setSignUpError("");
               }
             }}
-            onFocus={()=>{
-              setSignUpError('')
+            onFocus={() => {
+              setSignUpError("");
             }}
           />
         </View>
@@ -119,7 +128,13 @@ export default function SignupScreen({ route, navigation }) {
           mode="contained-tonal"
           buttonColor={"#000"}
           textColor={"white"}
-          disabled={email == "" || password == "" || confirmPassword == "" || signUpError == "passwords do not match" || password != confirmPassword}
+          disabled={
+            email == "" ||
+            password == "" ||
+            confirmPassword == "" ||
+            signUpError == "passwords do not match" ||
+            password != confirmPassword
+          }
           loading={loadingButton}
           onPress={() => {
             onSignUpButtonPressed();
@@ -132,13 +147,17 @@ export default function SignupScreen({ route, navigation }) {
         </View>
         <View style={styles.createNewAccountContainer}>
           <Text style={{ color: "grey" }}>Already Have one?</Text>
-          <TouchableOpacity onPress={()=>{navigation.navigate("Login", {message: 'Lol'});}}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Login", { message: "Lol" });
+            }}
+          >
             <Text style={{ fontWeight: "bold" }}> Sign in</Text>
           </TouchableOpacity>
         </View>
       </View>
 
       <StatusBar style="auto" />
-    </View>
+    </ScrollView>
   );
 }

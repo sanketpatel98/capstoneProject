@@ -62,7 +62,7 @@ export default function ShoppingCartScreen({ navigation }) {
           <MaterialCommunityIcons name="magnify" size={25} />
           <TextInput
             style={styles.serchIngredientTextInput}
-            placeholder="Add ingredient in Cart"
+            placeholder="Add ingredient to Cart"
             placeholderTextColor={"white"}
             underlineColorAndroid="transparent"
             // onChangeText={onTextChange}

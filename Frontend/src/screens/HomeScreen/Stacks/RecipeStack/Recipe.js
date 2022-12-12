@@ -16,7 +16,7 @@ import back from "../../../../assets/image/left.png";
 import {
   getRecipeById,
   getRecipeInstructionById,
-  getIngredientById
+  getIngredientById,
 } from "../../../../backendCalls/recipeData";
 import { CircleButton } from "../../../../components/CircleButton";
 import { addToCart } from "../../../../Redux/cartSlice";
@@ -48,40 +48,47 @@ export default function Recipe({ route, navigation }) {
   const userState = useSelector((state) => state.user.userRef);
   const favourtieList = useSelector((state) => state.favourite.list);
   const [favouriteStatus, setFavouriteStatus] = useState("");
-
+  const [qrCodeEnabled, setQrCodeEnabled] = useState(false);
   // useEffect(() => {
   //   // getting recipe(for readyInMinutes)
   //   fetchData();
   // }, []);
 
-  useEffect(()=>{
-fetchData();
-  },[route.params])
+  useEffect(() => {
+    fetchData();
+  }, [route.params]);
 
   function fetchData() {
     if (route.params.item.id.length > 15) {
-      var extendedIngredientsWithImage = []
-      var allPromises = []
+      var extendedIngredientsWithImage = [];
+      var allPromises = [];
       route.params.item.extendedIngredients.forEach((element) => {
-        var result = getIngredientById(element.id).then((res)=>{
-          console.log(res.image);
-          extendedIngredientsWithImage.push({id:element.id, name:element.name, image:res.image})
-        }).catch((err)=>{
-          console.log(err);
-        })  
-        allPromises.push(result)
+        var result = getIngredientById(element.id)
+          .then((res) => {
+            console.log(res.image);
+            extendedIngredientsWithImage.push({
+              id: element.id,
+              name: element.name,
+              image: res.image,
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        allPromises.push(result);
       });
-      Promise.all(allPromises).then(()=>{
-        var updatedRecipe = JSON.parse(JSON.stringify(route.params.item))
-        console.log(updatedRecipe);
-        updatedRecipe.extendedIngredients = extendedIngredientsWithImage
-        setRecipe(updatedRecipe);
-        setReadyInMinutes(route.params.item.readyInMinutes);
-        setRecipeInstructions(route.params.item.instructions);
-      }).catch((err)=>{
-        console.log(err);
-      })
-      
+      Promise.all(allPromises)
+        .then(() => {
+          var updatedRecipe = JSON.parse(JSON.stringify(route.params.item));
+          console.log(updatedRecipe);
+          updatedRecipe.extendedIngredients = extendedIngredientsWithImage;
+          setRecipe(updatedRecipe);
+          setReadyInMinutes(route.params.item.readyInMinutes);
+          setRecipeInstructions(route.params.item.instructions);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     } else {
       getRecipeById(route.params.item.id)
         .then((res) => {
@@ -123,7 +130,7 @@ fetchData();
 
   const baseUrl = "https://spoonacular.com/cdn/ingredients_500x500/";
   const addIngredientToCart = (item) => {
-    if (!cart.some(ing => ing.id === item.id)) {
+    if (!cart.some((ing) => ing.id === item.id)) {
       dispatch(addToCart(item));
       setRecentIngredient(item.name);
       setSnackBarEnabled(true);
@@ -270,7 +277,7 @@ fetchData();
     <>
       <ScrollView style={styles.container} nestedScrollEnabled={true}>
         <StatusBar hidden />
-        <View>
+        <View style={{backgroundColor: 'black'}}>
           <View style={styles.recipeImageView}>
             <ImageBackground
               source={{ uri: recipe.image }} //route.params.item.image
@@ -296,18 +303,53 @@ fetchData();
           </View>
           <View style={styles.recipeDescriptionView}>
             <View style={styles.recipeDescriptionTitleView}>
-              <Text numberOfLines={3} style={styles.recipeDescriptionTitleText}>
-                {/* {route.params.item.title} */}
-                {recipe.title}
-              </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: 'center'
+                }}
+              >
+                <Text
+                  numberOfLines={4}
+                  style={styles.recipeDescriptionTitleText}
+                >
+                  {/* {route.params.item.title} */}
+                  {recipe.title}
+                </Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    setQrCodeEnabled(!qrCodeEnabled);
+                  }}
+                  style={{borderLeftColor: '#D3D3D3', borderLeftWidth: 1, paddingLeft: 10}}
+                >
+                  <Image
+                    source={{
+                      uri: `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${route.params.item.id}`,
+                    }}
+                    style={{ width: 25, height: 25 }}
+                  />
+                </TouchableOpacity>
+              </View>
+
               <Text style={styles.preprationTimeText}>
                 Time to prepare: {readyInMinutes} Minutes
               </Text>
             </View>
             <View style={styles.ingredientContainerList}>
+              {qrCodeEnabled && (
+                <Image
+                  source={{
+                    uri: `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${route.params.item.id}`,
+                  }}
+                  style={{ width: 200, height: 200, marginBottom: 50 }}
+                />
+              )}
+
               <Text style={styles.ingredientContainerListTitle}>
                 Required Ingredients
               </Text>
+
               {requireIngredients.map((item, index) => (
                 <RenderItems item={item} style={{ flex: 1 }} key={index} />
               ))}
@@ -359,7 +401,6 @@ fetchData();
               </View>
             )}
           </View>
-
           <StatusBar style="auto" />
         </View>
       </ScrollView>
@@ -374,11 +415,10 @@ fetchData();
           },
         }}
       >
-        <Text style={{color: 'white'}}>
-        {recentIngredient.charAt(0).toUpperCase() + recentIngredient.slice(1)}{" "}
-        added!
+        <Text style={{ color: "white" }}>
+          {recentIngredient.charAt(0).toUpperCase() + recentIngredient.slice(1)}{" "}
+          added!
         </Text>
-        
       </Snackbar>
       <Snackbar
         visible={snackBarForFavourite}
@@ -391,10 +431,9 @@ fetchData();
           },
         }}
       >
-        <Text style={{color: 'white'}}>
-        Recipe {favouriteStatus} Favourite Recipes!
+        <Text style={{ color: "white" }}>
+          Recipe {favouriteStatus} Favourite Recipes!
         </Text>
-        
       </Snackbar>
       <Snackbar
         visible={snackBarForLogin}
@@ -407,10 +446,7 @@ fetchData();
           },
         }}
       >
-        <Text style={{color: 'white'}}>
-        Login successful!
-        </Text>
-        
+        <Text style={{ color: "white" }}>Login successful!</Text>
       </Snackbar>
     </>
   );

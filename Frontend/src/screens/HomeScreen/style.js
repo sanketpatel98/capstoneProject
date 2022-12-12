@@ -17,7 +17,19 @@ const styles = StyleSheet.create({
   listContainer: {
     marginRight: -30,
     marginStart: -30,
-    paddingStart: 25
+    paddingStart: 25,
+  },
+  qrcodeScannerIcon:{
+    height: 20,
+    width: 20
+  },
+  absoluteFillObject: {
+    height: "100%",
+    width: "100%",
+  },
+  barcodeScanner:{
+    width: '100%',
+    height: '90%'
   },
   greetingsContainer: {
     marginBottom: 30,
@@ -26,17 +38,17 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
   },
   titleText: {
-    fontSize: SIZES.extraLarge,
-    color: COLORS.black,
+    fontSize: SIZES.extraLarge + SIZES.small,
+    color: '#2d3b24',
     fontWeight: "bold",
-    fontStyle: 'italic'
+    fontStyle: "italic",
   },
   container: {
-    paddingTop: 10,
-    backgroundColor: COLORS.white,
+    
+    paddingTop: 40,
     alignItems: "center",
     justifyContent: "center",
-    // backgroundColor: "#DDF7F8",
+    backgroundColor: COLORS.mainThemeColor,
   },
   recipeContainer: {
     borderColor: COLORS.black,
@@ -48,8 +60,8 @@ const styles = StyleSheet.create({
     width: 150,
     height: 100,
   },
-  footerContainer:{
-    marginEnd: 60
+  footerContainer: {
+    marginEnd: 60,
   },
   footerImageBackground: {
     width: 100,
@@ -60,8 +72,8 @@ const styles = StyleSheet.create({
   listTitle: {
     fontWeight: "bold",
     fontSize: SIZES.extraLarge,
-    color: COLORS.black,
-    marginBottom:10
+    color: COLORS.mainTextColor,
+    marginBottom: 10,
   },
   descriptionContainer: {
     // alignItems: "center",
@@ -72,7 +84,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   descriptionText: {
-    color: COLORS.black,
+    color: COLORS.mainDescColor,
     fontSize: SIZES.small,
   },
 });

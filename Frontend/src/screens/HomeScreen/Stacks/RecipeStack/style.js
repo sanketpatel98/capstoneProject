@@ -4,13 +4,17 @@ import { COLORS, SIZES } from "../../../../styles/commonStyles";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.mainThemeColor,
     // alignItems: 'center',
     // justifyContent: 'center',
+    // color: COLORS.mainThemeColor
   },
   recipeImageBackground: {
     width: Dimensions.get("window").width,
     height: Dimensions.get("window").height * 0.45,
+  },
+  descriptionText:{
+    color: COLORS.mainTextColor
   },
   recipeImageView: {
     flex: 2,
@@ -21,10 +25,10 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
     // marginTop: -120,
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.mainThemeColor,
   },
   recipeDescriptionTitleView: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.mainThemeColor,
     width: Dimensions.get("window").width,
     paddingHorizontal: 40,
     marginTop: -50,
@@ -34,9 +38,10 @@ const styles = StyleSheet.create({
     minHeight: 100,
   },
   recipeDescriptionTitleText: {
-    color: COLORS.black,
+    color: COLORS.mainTextColor,
     fontSize: SIZES.large + 3,
     fontWeight: "bold",
+    marginRight: 3
   },
   floatButton: {
     alignContent: "space-between",
@@ -64,7 +69,7 @@ const styles = StyleSheet.create({
     left: 30,
   },
   preprationTimeText: {
-    color: COLORS.gray,
+    color: COLORS.mainDescColor,
   },
 
   ingredientContainer: {
@@ -91,14 +96,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   ingredientContainerList: {
-    marginTop: 30,
-    paddingHorizontal: 25,
-    alignItems: "center",
+    marginTop: 15,
+    paddingHorizontal: 35,
+    // alignItems: "center",
+
   },
   ingredientContainerListTitle: {
     fontSize: SIZES.large,
     fontWeight: "bold",
     marginBottom: 10,
+    color: COLORS.mainTextColor
   },
   listContainer: {
     marginEnd: -30,

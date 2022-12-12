@@ -1,5 +1,5 @@
 import styles from "./style";
-import { Text, View, Image, TouchableOpacity } from "react-native";
+import { Text, View, Image, TouchableOpacity, ScrollView } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { CircleButton } from "../../components/CircleButton";
 import back from "../../assets/image/left.png";
@@ -19,6 +19,7 @@ export default function LoginScreen({ route, navigation }) {
   const [loadingButton, setLoadingButton] = useState(false);
   const [loginError, setLoginError] = useState("");
   const [snackBarEnabled, setSnackBarEnabled] = useState(false);
+  const [passwordSecure, setPasswordSecure] = useState(true)
   const dispatch = useDispatch();
 
   const onLoginButtonPressed = () => {
@@ -57,7 +58,7 @@ export default function LoginScreen({ route, navigation }) {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.likeButton}>
         <CircleButton
           imgUrl={back}
@@ -93,6 +94,8 @@ export default function LoginScreen({ route, navigation }) {
           <TextInput
             style={styles.userInputText}
             label="Password"
+            secureTextEntry={passwordSecure}
+            right={<TextInput.Icon icon="eye" onPress={()=>{setPasswordSecure(!passwordSecure)}}/>}
             value={password}
             onChangeText={(text) => setPassword(text)}
           />
@@ -140,6 +143,6 @@ export default function LoginScreen({ route, navigation }) {
         We've sent an email for varification!
       </Snackbar>
       <StatusBar style="auto" />
-    </View>
+    </ScrollView>
   );
 }

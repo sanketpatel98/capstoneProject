@@ -152,7 +152,7 @@ export default function PantryScreen() {
           },
         }}
       >
-        {recentIngredient.charAt(0).toUpperCase() + recentIngredient.slice(1)} added!
+        <Text style={{color: 'white'}}> {recentIngredient.charAt(0).toUpperCase() + recentIngredient.slice(1)} added!</Text>
       </Snackbar>
     </SafeAreaView>
   );

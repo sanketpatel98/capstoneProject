@@ -51,9 +51,7 @@ export default function AddNewRecipeScreen({navigation}) {
       aspect: [4, 3],
       quality: 1,
     });
-    console.log(result);
-    const source = { uri: result.uri };
-    console.log(source);
+    const source = { uri: result.assets[0].uri };
     setImage(source);
   };
 
@@ -93,8 +91,8 @@ const extendedIngredientsArray = []
     });
 
 const newTime = () => {
-  currentTime = Date().toString().replaceAll(' ','')
-  return currentTime
+  const currentTime = new Date()
+  return currentTime.getTime()
 }
 
     const customRecipe = {

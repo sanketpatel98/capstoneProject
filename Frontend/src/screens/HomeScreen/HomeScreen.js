@@ -8,7 +8,9 @@ import {
   TouchableOpacity,
   View,
   ScrollView,
+  // Button,
 } from "react-native";
+import { Button } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
 import {
@@ -17,6 +19,8 @@ import {
 } from "../../backendCalls/recipeData";
 import { getCustomRecipeById } from "../../backendCalls/customRecipes";
 import styles from "./style";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { BarCodeScanner } from "expo-barcode-scanner";
 
 export default function HomeScreen({ navigation }) {
   const [recipeByPantry, setRecipeByPantry] = useState([]);
@@ -25,6 +29,10 @@ export default function HomeScreen({ navigation }) {
   const pantry = useSelector((state) => state.pantry.list);
   const deeplinkId = useSelector((state) => state.deeplink.id);
   const [appReady, setAppReady] = useState(false);
+
+  const [hasPermission, setHasPermission] = useState(null);
+  const [scanned, setScanned] = useState(false);
+  const [scannerEnabled, setScannerEnabled] = useState(false);
 
   useEffect(() => {
     console.log("Log from home screen");
@@ -65,7 +73,7 @@ export default function HomeScreen({ navigation }) {
         console.log(err);
       });
 
-    const cuisines = ["Indian"]//, "Chinese", "Mexican", "Greek", "Thai"];
+    const cuisines = ["Indian", "Chinese", "Mexican", "Greek", "Thai"];
     var cuisinePromises = [];
     cuisines.forEach((cuisine) => {
       cuisinePromises.push(
@@ -128,66 +136,101 @@ export default function HomeScreen({ navigation }) {
     </TouchableOpacity>
   );
 
+  const getBarCodeScannerPermissions = async () => {
+    if (!hasPermission) {
+      const { status } = await BarCodeScanner.requestPermissionsAsync();
+      setHasPermission(status === "granted");
+    }
+  };
+
+  const handleBarCodeScanned = ({ type, data }) => {
+    setScanned(true);
+    setScannerEnabled(false);
+    console.log(
+      `Bar code with type ${type} and data ${data} has been scanned!`
+    );
+    console.log(data);
+    // const queryParamArr = data.split('?',2)
+    // const id = queryParamArr[1].split('=',2)[1]
+    if (data) {
+      if (data.toString().length > 10) {
+        getCustomRecipeById(data).then((res) => {
+          setScanned(false);
+          navigation.navigate("Recipe", {
+            item: res,
+          });
+        });
+      } else if (data.toString().length < 10) {
+        navigation.navigate("Recipe", {
+          item: {id:data},
+        });
+      }
+    }
+    setScanned(false);
+    // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
-      {appReady && (
-        <ScrollView
-          style={styles.mainContainer}
-          showsVerticalScrollIndicator={false}
-        >
-          <View style={styles.topContainer}>
-            <Image
-              source={require("../../assets/image/topIcon.png")}
-              style={styles.topIcon}
+    <View style={styles.container}>
+      {appReady &&
+        (scannerEnabled ? (
+          <View style={styles.absoluteFillObject}>
+            <BarCodeScanner
+              onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+              style={styles.barcodeScanner}
             />
-            <TouchableOpacity
+            <Button
+              mode="contained"
               onPress={() => {
-                navigation.navigate("Favourite");
+                setScannerEnabled(false);
+                setScanned(false);
               }}
             >
-              <Image
+              Back
+            </Button>
+          </View>
+        ) : (
+          <ScrollView
+            style={styles.mainContainer}
+            showsVerticalScrollIndicator={false}
+          >
+            {scannerEnabled ? <></> : <></>}
+            <View style={styles.topContainer}>
+              <TouchableOpacity
+                onPress={() => {
+                  setScannerEnabled(true);
+                  getBarCodeScannerPermissions();
+                  // navigation.navigate("Favourite");
+                }}
+                style={{ marginTop: 3 }}
+              >
+                {/* <Image
                 source={require("../../assets/image/heart.png")}
                 style={styles.topIcon}
-              />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.greetingsContainer}>
-            <Text style={styles.titleText}>Let's Find</Text>
-            <Text style={styles.titleText}>Your Recipe! </Text>
-          </View>
+              /> */}
+                <MaterialCommunityIcons name="qrcode-scan" size={29} color={'black'} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("Favourite");
+                }}
+              >
+                <Image
+                  source={require("../../assets/image/heart.png")}
+                  style={styles.topIcon}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.greetingsContainer}>
+              <Text style={styles.titleText}>Chef de cuisine</Text>
+              {/* <Text style={styles.titleText}>Your Recipe! </Text> */}
+            </View>
 
-          {recipeByPantry.length > 0 && (
-            <>
-              <Text style={styles.listTitle}>Recipes using Pantry</Text>
-              <FlatList
-                data={recipeByPantry}
-                renderItem={renderItems}
-                keyExtractor={(item) => item.id}
-                horizontal={true}
-                ListFooterComponent={listFooterItem}
-                style={styles.listContainer}
-                showsHorizontalScrollIndicator={false}
-              />
-            </>
-          )}
-
-          <Text style={styles.listTitle}>Popular recipes</Text>
-          <FlatList
-            data={popularRecipes}
-            renderItem={renderItems}
-            keyExtractor={(item) => item.id}
-            horizontal={true}
-            ListFooterComponent={listFooterItem}
-            style={styles.listContainer}
-            showsHorizontalScrollIndicator={false}
-          />
-
-          {recipesByCuisine.length > 0 ? (
-            recipesByCuisine.map((cuisineRecipes, index) => (
-              <View key={index}>
-                <Text style={styles.listTitle}>{cuisineRecipes.cuisine}</Text>
+            {recipeByPantry.length > 0 && (
+              <>
+                <Text style={styles.listTitle}>Recipes using Pantry</Text>
                 <FlatList
-                  data={cuisineRecipes.results}
+                  data={recipeByPantry}
                   renderItem={renderItems}
                   keyExtractor={(item) => item.id}
                   horizontal={true}
@@ -195,15 +238,42 @@ export default function HomeScreen({ navigation }) {
                   style={styles.listContainer}
                   showsHorizontalScrollIndicator={false}
                 />
-              </View>
-            ))
-          ) : (
-            <Text></Text>
-          )}
+              </>
+            )}
 
-          <StatusBar style="auto" />
-        </ScrollView>
-      )}
-    </SafeAreaView>
+            <Text style={styles.listTitle}>Popular recipes</Text>
+            <FlatList
+              data={popularRecipes}
+              renderItem={renderItems}
+              keyExtractor={(item) => item.id}
+              horizontal={true}
+              ListFooterComponent={listFooterItem}
+              style={styles.listContainer}
+              showsHorizontalScrollIndicator={false}
+            />
+
+            {recipesByCuisine.length > 0 ? (
+              recipesByCuisine.map((cuisineRecipes, index) => (
+                <View key={index}>
+                  <Text style={styles.listTitle}>{cuisineRecipes.cuisine} recipes</Text>
+                  <FlatList
+                    data={cuisineRecipes.results}
+                    renderItem={renderItems}
+                    keyExtractor={(item) => item.id}
+                    horizontal={true}
+                    ListFooterComponent={listFooterItem}
+                    style={styles.listContainer}
+                    showsHorizontalScrollIndicator={false}
+                  />
+                </View>
+              ))
+            ) : (
+              <Text></Text>
+            )}
+
+            <StatusBar style="auto" />
+          </ScrollView>
+        ))}
+    </View>
   );
 }

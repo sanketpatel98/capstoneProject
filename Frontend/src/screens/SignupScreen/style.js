@@ -5,13 +5,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-    alignItems: "center",
-    justifyContent: "center",
+    // alignItems: "center",
+    // justifyContent: "center",
   },
   loginTextContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 30
+    marginVertical: 30
   },
   loginText:{
     fontSize: SIZES.extraLarge + SIZES.base
@@ -30,11 +30,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   imageContainer: {
-    flex:0.80,
-    marginTop: 15
+    // flex:0.80,
+    height: '25%',
+    marginTop: 50,
+    justifyContent: 'center',
+    alignItems: 'center'    
   },
   workingImage: {
-    width: 300,
+    width: 250,
   },
   likeButton: {
     position: "absolute",
@@ -51,9 +54,10 @@ const styles = StyleSheet.create({
     color: 'red'
   },
   loginFormContainer: {
-    flex: 1,
-    borderColor: COLORS.black,
-    marginVertical: 100
+    marginVertical: -10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    // backgroundColor: 'green'
   },
   createNewAccountContainer: {
     marginTop: 15,

@@ -11,6 +11,9 @@ export const COLORS = {
   primary: "#ffffff", //white
   secondary: "#4D626C",
 
+mainThemeColor: '#DDEAD1',//
+mainTextColor: '#2d3b24',//
+mainDescColor: '#75975E',//
   white: "#ffffff",
   black: "#000000",
   gray: "#74858C",
