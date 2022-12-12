@@ -275,7 +275,7 @@ export default function Recipe({ route, navigation }) {
 
   return (
     <>
-      <ScrollView style={styles.container} nestedScrollEnabled={true}>
+      <ScrollView style={styles.container} nestedScrollEnabled={true} showsVerticalScrollIndicator={false}>
         <StatusBar hidden />
         <View style={{backgroundColor: 'black'}}>
           <View style={styles.recipeImageView}>
