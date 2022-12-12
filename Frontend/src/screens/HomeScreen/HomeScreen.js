@@ -35,9 +35,6 @@ export default function HomeScreen({ navigation }) {
   const [scannerEnabled, setScannerEnabled] = useState(false);
 
   useEffect(() => {
-    console.log("Log from home screen");
-    console.log(deeplinkId);
-
     if (deeplinkId.length > 10) {
       getCustomRecipeById(deeplinkId).then((res) => {
         navigation.navigate("Recipe", {
@@ -146,12 +143,6 @@ export default function HomeScreen({ navigation }) {
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
     setScannerEnabled(false);
-    console.log(
-      `Bar code with type ${type} and data ${data} has been scanned!`
-    );
-    console.log(data);
-    // const queryParamArr = data.split('?',2)
-    // const id = queryParamArr[1].split('=',2)[1]
     if (data) {
       if (data.toString().length > 10) {
         getCustomRecipeById(data).then((res) => {

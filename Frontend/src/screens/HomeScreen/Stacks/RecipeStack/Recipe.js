@@ -65,7 +65,6 @@ export default function Recipe({ route, navigation }) {
       route.params.item.extendedIngredients.forEach((element) => {
         var result = getIngredientById(element.id)
           .then((res) => {
-            console.log(res.image);
             extendedIngredientsWithImage.push({
               id: element.id,
               name: element.name,
@@ -80,7 +79,6 @@ export default function Recipe({ route, navigation }) {
       Promise.all(allPromises)
         .then(() => {
           var updatedRecipe = JSON.parse(JSON.stringify(route.params.item));
-          console.log(updatedRecipe);
           updatedRecipe.extendedIngredients = extendedIngredientsWithImage;
           setRecipe(updatedRecipe);
           setReadyInMinutes(route.params.item.readyInMinutes);
@@ -93,7 +91,6 @@ export default function Recipe({ route, navigation }) {
       getRecipeById(route.params.item.id)
         .then((res) => {
           setReadyInMinutes(res.readyInMinutes);
-          console.log(res.image);
           setRecipe(res);
           // setIngredientAvailability();
         })

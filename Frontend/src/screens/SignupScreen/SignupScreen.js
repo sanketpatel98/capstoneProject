@@ -24,7 +24,6 @@ export default function SignupScreen({ route, navigation }) {
     setLoadingButton(true);
     userSignUp(email.toLowerCase(), password)
       .then((userRef) => {
-        console.log(userRef.data);
         if (userRef.data.userCred) {
           navigation.navigate("Login", { message: "verify email" });
         } else {

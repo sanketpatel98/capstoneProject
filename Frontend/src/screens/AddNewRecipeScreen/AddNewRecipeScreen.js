@@ -74,17 +74,11 @@ export default function AddNewRecipeScreen({navigation}) {
     }
     setUploading(false);
     // Alert.alert
-    console.log("Photo uploaded");
     setIconForImage("check");
     setImage(null);
   };
 
   const onSubmitButtonPressed = () => {
-    // console.log("recipeName:" + recipeName);
-    // console.log("cookingTime:" + cookingTime);
-    // console.log("recipeInstructions:" + recipeInstructions);
-    // console.log("recipeSummary:" + recipeSummary);
-    // console.log("pantry:" + pantry);
 const extendedIngredientsArray = []
     pantry.forEach(element => {
       extendedIngredientsArray.push({name:element[0], id:element[1]})
@@ -131,7 +125,6 @@ const newTime = () => {
 
     for (let i = 0; i < selectedItems.length; i++) {
       var tempItem = DATA.find((item) => item.id == selectedItems[i]);
-      console.log(tempItem);
     }
   };
 
