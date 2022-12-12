@@ -20,6 +20,7 @@ import * as Linking from "expo-linking";
 import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import { changeId } from "./src/Redux/deeplinkSlice";
+import { COLORS } from "./src/styles/commonStyles";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -28,7 +29,7 @@ export default AppWrapper = () => {
   // const store = createStore(rootReducer);
 
   const [data, setData] = useState(null);
-  const [id, setId] = useState('')
+  const [id, setId] = useState("");
   const handleDeeplink = (event) => {
     let data = Linking.parse(event.url);
     setData(data);
@@ -36,10 +37,10 @@ export default AppWrapper = () => {
 
   useEffect(() => {
     if (data) {
-      const param = data.queryParams
+      const param = data.queryParams;
       // console.log(param);
       if (param.id) {
-        setId(param.id)
+        setId(param.id);
       }
       // console.log();
     } else {
@@ -66,25 +67,26 @@ export default AppWrapper = () => {
 
   return (
     <Provider store={store}>
-      <App id={id}/>
+      <App id={id} />
     </Provider>
   );
 };
 
-function App({id}) {
+function App({ id }) {
   const cart = useSelector((state) => state.cart.list);
   const dispatch = useDispatch();
 
-  useEffect(()=>{
+  useEffect(() => {
     // console.log("Id has been changed!" + id);
-    dispatch(changeId(id))
-  },[id])
+    dispatch(changeId(id));
+  }, [id]);
 
   const MyTheme = {
     ...DefaultTheme,
     colors: {
       ...DefaultTheme.colors,
-      primary: "red",
+      primary: "green",
+      background: COLORS.mainThemeColor,
     },
   };
 
@@ -160,7 +162,12 @@ function App({id}) {
   return (
     // <Provider store={store}>
     <NavigationContainer theme={MyTheme}>
-      <Tab.Navigator>
+      <Tab.Navigator
+        screenOptions={{
+          tabBarActiveBackgroundColor: "black",
+          tabBarInactiveBackgroundColor: "black",
+        }}
+      >
         <Tab.Screen
           name="HomeStackScreen"
           component={HomeStackScreen}
@@ -222,7 +229,7 @@ function App({id}) {
             component={ShoppingCartScreen}
             options={{
               headerShown: false,
-              tabBarLabel: "cart",
+              tabBarLabel: "Cart",
               tabBarIcon: ({ color, size }) => (
                 <MaterialCommunityIcons name="cart" color={color} size={size} />
               ),
