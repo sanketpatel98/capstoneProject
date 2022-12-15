@@ -36,10 +36,10 @@ const styles = StyleSheet.create({
     },
     headerText:{
       marginTop: 20,
-      fontSize: SIZES.large
+      fontSize: SIZES.large + SIZES.small
     },
     titleContainer: {
-      flex:1,
+      flex:0.7,
       // flexDirection: 'row',
       alignItems: 'center',
       // justifyContent: 'center',

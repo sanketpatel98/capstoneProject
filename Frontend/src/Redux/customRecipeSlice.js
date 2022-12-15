@@ -21,12 +21,12 @@ export const customRecipeSlice = createSlice({
         }
       }
     },
-    // setFavourite: (state, action) => {
-    //   state.list = action.payload
-    // }
+    setCustom: (state, action) => {
+      state.list = action.payload
+    }
   },
 });
 
-export const { addToCustom, removeFromCustom  } = customRecipeSlice.actions;
+export const { addToCustom, removeFromCustom, setCustom  } = customRecipeSlice.actions;
 
 export default customRecipeSlice.reducer;

@@ -28,7 +28,7 @@ export default function MyRecipesScreen({ navigation }) {
     return (
       <View style={styles.recipeContainer}>
         {/* <View style={styles.descriptionContainer}> */}
-        <TouchableOpacity
+        <TouchableOpacity 
           style={styles.descriptionContainer}
           onPress={() => {
             navigation.navigate("Recipe", {
@@ -88,20 +88,21 @@ export default function MyRecipesScreen({ navigation }) {
         </View>
         <View style={styles.listContainer}>
           {custom.length == 0 ? (
-          <Image
-            source={require("../../assets/image/Favourite.png")}
-            style={styles.emptyImage}
-            resizeMode="contain"
-          />
-        ) : (
-          <FlatList
-            data={custom}
-            renderItem={renderFavourties}
-            keyExtractor={(item) => item.id}
-            style={styles.ingredientListContainer}
-            showsHorizontalScrollIndicator={false}
-          />
-        )}
+            <Image
+              source={require("../../assets/image/Favourite.png")}
+              style={styles.emptyImage}
+              resizeMode="contain"
+            />
+          ) : (
+            <FlatList
+              data={custom}
+              renderItem={renderFavourties}
+              keyExtractor={(item) => item.id}
+              style={styles.ingredientListContainer}
+              showsHorizontalScrollIndicator={false}
+            />
+          )}
+          <View style={styles.addNewRecipeButtonContainer}>
           <Button
             mode="elevated"
             icon={"plus"}
@@ -112,7 +113,7 @@ export default function MyRecipesScreen({ navigation }) {
             Add new recipe
           </Button>
         </View>
-        <View></View>
+        </View>
         <StatusBar style="auto" />
       </SafeAreaView>
     );

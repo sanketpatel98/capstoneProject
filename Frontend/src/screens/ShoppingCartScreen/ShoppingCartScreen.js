@@ -13,7 +13,6 @@ export default function ShoppingCartScreen({ navigation }) {
   const cart = useSelector((state) => state.cart.list);
   const dispatch = useDispatch();
   useEffect(() => {
-    // console.log(cart);
   }, [cart]);
 
   const deleteIngredientFromCart = (item) => {
@@ -35,7 +34,7 @@ export default function ShoppingCartScreen({ navigation }) {
         >
           <MaterialCommunityIcons
             name="magnify"
-            size={22}
+            size={25}
             color={"green"}
           />
         </TouchableOpacity>
@@ -45,8 +44,8 @@ export default function ShoppingCartScreen({ navigation }) {
           }}
         >
           <MaterialCommunityIcons
-            name="delete-outline"
-            size={22}
+            name="cart-remove"
+            size={25}
             color={"red"}
           />
         </TouchableOpacity>
@@ -58,7 +57,7 @@ export default function ShoppingCartScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <StatusBar hidden />
       <View style={styles.titleContainer}>
-        <View style={styles.titleBarContainer}>
+        {/* <View style={styles.titleBarContainer}>
           <MaterialCommunityIcons name="magnify" size={25} />
           <TextInput
             style={styles.serchIngredientTextInput}
@@ -68,7 +67,7 @@ export default function ShoppingCartScreen({ navigation }) {
             // onChangeText={onTextChange}
             // value={userInputIngredient}
           ></TextInput>
-        </View>
+        </View> */}
         <Text style={styles.headerText}>Shopping Cart</Text>
       </View>
       <View style={styles.listContainer}>

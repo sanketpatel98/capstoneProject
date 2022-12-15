@@ -11,14 +11,16 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
     },
     buttonContainer:{
-      flexDirection: 'row'
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      width: 60
     },
     headerText:{
       marginTop: 20,
-      fontSize: SIZES.large
+      fontSize: SIZES.large + SIZES.small
     },
     titleContainer: {
-      flex:1,
+      flex:0.7,
       // flexDirection: 'row',
       alignItems: 'center',
       // justifyContent: 'center',

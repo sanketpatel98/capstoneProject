@@ -7,14 +7,14 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
-  TextInput,
   Alert,
+  ScrollView,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useState, useEffect } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { firebase } from "../../../firebaseConfig";
-import { Button } from "react-native-paper";
+import { Button, TextInput } from "react-native-paper";
 import { ingredients } from "../../assets/static/Ingredients";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { Snackbar } from "react-native-paper";
@@ -22,7 +22,7 @@ import { addCustomRecipe } from "../../backendCalls/customRecipes";
 import { useSelector, useDispatch } from "react-redux";
 import { addToCustom } from "../../Redux/customRecipeSlice";
 
-export default function AddNewRecipeScreen({navigation}) {
+export default function AddNewRecipeScreen({ navigation }) {
   const [recipeName, setRecipeName] = useState("");
   const [cookingTime, setCookingTime] = useState(0);
   const [recipeInstructions, setRecipeInstructions] = useState("");
@@ -50,9 +50,14 @@ export default function AddNewRecipeScreen({navigation}) {
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
-    });
-    const source = { uri: result.assets[0].uri };
-    setImage(source);
+    })
+      .then((result) => {
+        if (result) {
+          const source = { uri: result.assets[0].uri };
+          setImage(source);
+        }
+      })
+      .catch(() => {});
   };
 
   const uploadImage = async () => {
@@ -64,6 +69,7 @@ export default function AddNewRecipeScreen({navigation}) {
     imageRef.put(blob).then((snapShot) => {
       snapShot.ref.getDownloadURL().then(function (downloadURL) {
         setUploadedImageUrl(downloadURL);
+        setUploading(false);
       });
     });
 
@@ -72,46 +78,45 @@ export default function AddNewRecipeScreen({navigation}) {
     } catch (err) {
       console.log(err);
     }
-    setUploading(false);
     // Alert.alert
     setIconForImage("check");
-    setImage(null);
+    // setImage(null);
   };
 
   const onSubmitButtonPressed = () => {
-const extendedIngredientsArray = []
-    pantry.forEach(element => {
-      extendedIngredientsArray.push({name:element[0], id:element[1]})
+    const extendedIngredientsArray = [];
+    pantry.forEach((element) => {
+      extendedIngredientsArray.push({ name: element[0], id: element[1] });
     });
 
-const newTime = () => {
-  const currentTime = new Date()
-  return currentTime.getTime()
-}
+    const newTime = () => {
+      const currentTime = new Date();
+      return currentTime.getTime();
+    };
 
     const customRecipe = {
       id: userRef.user.uid + newTime(),
       title: recipeName,
       readyInMinutes: cookingTime,
       extendedIngredients: extendedIngredientsArray,
-      summary:recipeSummary,
+      summary: recipeSummary,
       instructions: [
         {
           steps: [
             {
               number: 1,
-              step: recipeInstructions
+              step: recipeInstructions,
             },
           ],
         },
       ],
-      image: uploadedImageUrl
+      image: uploadedImageUrl,
     };
 
-    addCustomRecipe(customRecipe, userRef.user.uid).then(()=>{
-      dispatch(addToCustom(customRecipe))
-      navigation.goBack()
-    })
+    addCustomRecipe(customRecipe, userRef.user.uid).then(() => {
+      dispatch(addToCustom(customRecipe));
+      navigation.goBack();
+    });
   };
   var DATA = [];
   useEffect(() => {
@@ -216,7 +221,8 @@ const newTime = () => {
   return (
     <SafeAreaView style={styles.container}>
       {!selectingIngredient ? (
-        <View
+        <ScrollView
+          showsVerticalScrollIndicator={false}
           style={styles.AddNewRecipeFormContainer}
           // pointerEvents={() => (selectingIngredient ? "none" : "auto")}
         >
@@ -225,18 +231,24 @@ const newTime = () => {
           </View>
           <View style={styles.textInputContainer}>
             <TextInput
+              style={styles.textInput}
+              label="Recipe name"
+              value={recipeName}
+              onChangeText={(text) => setRecipeName(text)}
+              mode={"outlined"}
+            />
+            {/* <TextInput
               placeholder="Recipe name"
               placeholderTextColor={"black"}
               value={recipeName}
               onChangeText={(recipeName) => setRecipeName(recipeName)}
               style={styles.textInput}
               mode={"outlined"}
-            />
+            /> */}
           </View>
           <View style={styles.textInputContainer}>
             <TextInput
-              placeholder="Recipe cooking time in minutes"
-              placeholderTextColor={"black"}
+              label="Recipe cooking time in minutes"
               value={cookingTime}
               onChangeText={(text) => setCookingTime(text)}
               style={styles.textInput}
@@ -246,22 +258,24 @@ const newTime = () => {
           </View>
           <View style={styles.textInputContainer}>
             <TextInput
-              placeholder="Recipe instructions"
-              placeholderTextColor={"black"}
+              label="Recipe instructions"
               value={recipeInstructions}
               onChangeText={(text) => setRecipeInstructions(text)}
-              style={styles.textInput}
+              style={{ ...styles.textInput, height: 90 }}
               mode={"outlined"}
+              numberOfLines={3}
+              multiline={true}
             />
           </View>
           <View style={styles.textInputContainer}>
             <TextInput
-              placeholder="Recipe summary"
-              placeholderTextColor={"black"}
+              label="Recipe summary"
               value={recipeSummary}
               onChangeText={(text) => setRecipeSummary(text)}
-              style={styles.textInput}
+              style={{ ...styles.textInput, height: 90 }}
               mode={"outlined"}
+              numberOfLines={3}
+              multiline={true}
             />
           </View>
 
@@ -273,9 +287,11 @@ const newTime = () => {
           >
             Select Ingredients
           </Button>
-          <Text>
-            {pantry.length > 0 && `${pantry.length} ingredients selected`}
-          </Text>
+          <View style={{ alignItems: "center" }}>
+            <Text>
+              {pantry.length > 0 && `${pantry.length} ingredients selected`}
+            </Text>
+          </View>
 
           <View style={styles.uploadImageContainer}>
             <View style={styles.uploadImageImageContainer}>
@@ -302,6 +318,7 @@ const newTime = () => {
                   uploadImage();
                 }}
                 icon={iconForImage}
+                disabled={image == null}
               >
                 Upload an image
               </Button>
@@ -321,10 +338,11 @@ const newTime = () => {
               uploadedImageUrl == "" ||
               pantry.length == 0
             }
+            loading={uploading}
           >
             Submit
           </Button>
-        </View>
+        </ScrollView>
       ) : (
         <View>
           <View style={styles.titleContainer}>
@@ -391,9 +409,11 @@ const newTime = () => {
               },
             }}
           >
-            <Text style={{color: 'white'}}>{recentIngredient.charAt(0).toUpperCase() +
-              recentIngredient.slice(1)}{" "}
-            added!</Text>
+            <Text style={{ color: "white" }}>
+              {recentIngredient.charAt(0).toUpperCase() +
+                recentIngredient.slice(1)}{" "}
+              added!
+            </Text>
           </Snackbar>
         </View>
       )}

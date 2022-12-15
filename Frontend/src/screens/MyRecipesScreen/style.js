@@ -111,6 +111,9 @@ const styles = StyleSheet.create({
     addedIngredientText: {
       fontSize: SIZES.large,
       marginStart: 5
+    },
+    addNewRecipeButtonContainer:{
+      marginBottom: 10
     }
   });
 

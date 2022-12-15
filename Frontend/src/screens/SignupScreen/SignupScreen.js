@@ -33,6 +33,9 @@ export default function SignupScreen({ route, navigation }) {
           } else if (userRef.data.code == "auth/invalid-email") {
             setSignUpError("Email not valid");
             setLoadingButton(false);
+          } else if (userRef.data.code == "auth/email-already-in-use") {
+            setSignUpError("Email already in use");
+            setLoadingButton(false);
           }
         }
       })

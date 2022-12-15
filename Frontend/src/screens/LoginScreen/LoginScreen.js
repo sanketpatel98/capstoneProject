@@ -12,6 +12,8 @@ import { login } from "../../Redux/userDataSclice";
 import { Snackbar } from "react-native-paper";
 import { getAllFavouriteRecipes } from "../../backendCalls/favouriteRecipe";
 import { setFavourite } from "../../Redux/favouriteRecipesSlice";
+import { setCustom } from "../../Redux/customRecipeSlice";
+import { getAllCustomRecipes } from "../../backendCalls/customRecipes";
 
 export default function LoginScreen({ route, navigation }) {
   const [email, setEmail] = useState("");
@@ -19,7 +21,7 @@ export default function LoginScreen({ route, navigation }) {
   const [loadingButton, setLoadingButton] = useState(false);
   const [loginError, setLoginError] = useState("");
   const [snackBarEnabled, setSnackBarEnabled] = useState(false);
-  const [passwordSecure, setPasswordSecure] = useState(true)
+  const [passwordSecure, setPasswordSecure] = useState(true);
   const dispatch = useDispatch();
 
   const onLoginButtonPressed = () => {
@@ -28,9 +30,18 @@ export default function LoginScreen({ route, navigation }) {
       .then((userRef) => {
         if (userRef.data.response) {
           if (userRef.data.response.user.emailVerified) {
-            getAllFavouriteRecipes(userRef.data.response.user.uid).then((response)=>{
-              dispatch(setFavourite(response.data.response))
-            })
+            getAllFavouriteRecipes(userRef.data.response.user.uid).then(
+              (response) => {
+                dispatch(setFavourite(response.data.response));
+              }
+            );
+            getAllCustomRecipes(userRef.data.response.user.uid)
+              .then((response) => {
+                dispatch(setCustom(response))
+              })
+              .catch((err) => {
+                console.log(err);
+              });
             dispatch(login(userRef.data.response));
             navigation.goBack();
           } else {
@@ -95,7 +106,14 @@ export default function LoginScreen({ route, navigation }) {
             style={styles.userInputText}
             label="Password"
             secureTextEntry={passwordSecure}
-            right={<TextInput.Icon icon="eye" onPress={()=>{setPasswordSecure(!passwordSecure)}}/>}
+            right={
+              <TextInput.Icon
+                icon="eye"
+                onPress={() => {
+                  setPasswordSecure(!passwordSecure);
+                }}
+              />
+            }
             value={password}
             onChangeText={(text) => setPassword(text)}
           />
@@ -124,7 +142,11 @@ export default function LoginScreen({ route, navigation }) {
         </View>
         <View style={styles.createNewAccountContainer}>
           <Text style={{ color: "grey" }}>Don't have an account?</Text>
-          <TouchableOpacity onPress={()=>{navigation.navigate("Signup");}}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Signup");
+            }}
+          >
             <Text style={{ fontWeight: "bold" }}> Create new one</Text>
           </TouchableOpacity>
         </View>

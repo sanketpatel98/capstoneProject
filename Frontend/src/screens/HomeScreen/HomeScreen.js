@@ -10,7 +10,7 @@ import {
   ScrollView,
   // Button,
 } from "react-native";
-import { Button } from "react-native-paper";
+import { Button, Snackbar } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
 import {
@@ -29,7 +29,7 @@ export default function HomeScreen({ navigation }) {
   const pantry = useSelector((state) => state.pantry.list);
   const deeplinkId = useSelector((state) => state.deeplink.id);
   const [appReady, setAppReady] = useState(false);
-
+  const [snackbar, setSnackbar] = useState(false);
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [scannerEnabled, setScannerEnabled] = useState(false);
@@ -137,6 +137,9 @@ export default function HomeScreen({ navigation }) {
     if (!hasPermission) {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
       setHasPermission(status === "granted");
+      if (status === "granted") {
+        setScannerEnabled(true);
+      }
     }
   };
 
@@ -147,18 +150,26 @@ export default function HomeScreen({ navigation }) {
       if (data.toString().length > 10) {
         getCustomRecipeById(data).then((res) => {
           setScanned(false);
-          navigation.navigate("Recipe", {
-            item: res,
-          });
+          if (res.id) {
+            navigation.navigate("Recipe", {
+              item: res,
+            });
+          } else {
+            setSnackbar(true);
+          }
         });
       } else if (data.toString().length < 10) {
         navigation.navigate("Recipe", {
-          item: {id:data},
+          item: { id: data },
         });
       }
     }
     setScanned(false);
     // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+  };
+
+  const onDismissSnackBar = () => {
+    setSnackbar(false);
   };
 
   return (
@@ -189,8 +200,12 @@ export default function HomeScreen({ navigation }) {
             <View style={styles.topContainer}>
               <TouchableOpacity
                 onPress={() => {
-                  setScannerEnabled(true);
-                  getBarCodeScannerPermissions();
+                  //
+                  if (hasPermission) {
+                    setScannerEnabled(true);
+                  } else {
+                    getBarCodeScannerPermissions();
+                  }
                   // navigation.navigate("Favourite");
                 }}
                 style={{ marginTop: 3 }}
@@ -199,7 +214,11 @@ export default function HomeScreen({ navigation }) {
                 source={require("../../assets/image/heart.png")}
                 style={styles.topIcon}
               /> */}
-                <MaterialCommunityIcons name="qrcode-scan" size={29} color={'black'} />
+                <MaterialCommunityIcons
+                  name="qrcode-scan"
+                  size={29}
+                  color={"black"}
+                />
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
@@ -246,7 +265,9 @@ export default function HomeScreen({ navigation }) {
             {recipesByCuisine.length > 0 ? (
               recipesByCuisine.map((cuisineRecipes, index) => (
                 <View key={index}>
-                  <Text style={styles.listTitle}>{cuisineRecipes.cuisine} recipes</Text>
+                  <Text style={styles.listTitle}>
+                    {cuisineRecipes.cuisine} recipes
+                  </Text>
                   <FlatList
                     data={cuisineRecipes.results}
                     renderItem={renderItems}
@@ -265,6 +286,18 @@ export default function HomeScreen({ navigation }) {
             <StatusBar style="auto" />
           </ScrollView>
         ))}
+      <Snackbar
+        visible={snackbar}
+        onDismiss={onDismissSnackBar}
+        action={{
+          label: "OK",
+          onPress: () => {
+            onDismissSnackBar();
+          },
+        }}
+      >
+        <Text style={{ color: "white" }}>Recipe not found!</Text>
+      </Snackbar>
     </View>
   );
 }

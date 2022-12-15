@@ -15,11 +15,13 @@ import { getRecipeById } from "../../backendCalls/recipeData";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { removeFromFavourite } from "../../Redux/favouriteRecipesSlice";
 import { removeFromFavouriteRecipe } from "../../backendCalls/favouriteRecipe";
+import { Button } from 'react-native-paper'
 
 export default function FavouriteScreen({navigation}) {
   const favourite = useSelector((state) => state.favourite.list);
   const userRef = useSelector((state) => state.user.userRef);
   const [favouriteRecipes, setFavouriteRecipes] = useState([]);
+  
   const dispatch = useDispatch();
   useEffect(() => {
     var allPromises = [];
@@ -80,17 +82,6 @@ export default function FavouriteScreen({navigation}) {
     <SafeAreaView style={styles.container}>
       <StatusBar hidden />
       <View style={styles.titleContainer}>
-        <View style={styles.titleBarContainer}>
-          <MaterialCommunityIcons name="magnify" size={25} />
-          <TextInput
-            style={styles.serchIngredientTextInput}
-            placeholder="Search Favourite"
-            placeholderTextColor={"white"}
-            underlineColorAndroid="transparent"
-            // onChangeText={onTextChange}
-            // value={userInputIngredient}
-          ></TextInput>
-        </View>
         <Text style={styles.headerText}>Favourite Recipes</Text>
       </View>
       <View style={styles.listContainer}>
@@ -109,6 +100,14 @@ export default function FavouriteScreen({navigation}) {
             showsHorizontalScrollIndicator={false}
           />
         )}
+        { "user" in userRef ? (<></>) : <Button
+          mode="elevated"
+          onPress={() => {
+            navigation.navigate("Login");
+          }}
+        >
+          Login to use this feature!
+        </Button> }
       </View>
       <StatusBar style="auto" />
     </SafeAreaView>

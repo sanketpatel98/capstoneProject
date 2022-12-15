@@ -237,7 +237,7 @@ function App({ id }) {
           />
         )}
 
-        <Tab.Screen
+        {/* <Tab.Screen
           name="Settings"
           component={SettingScreen}
           options={{
@@ -247,7 +247,7 @@ function App({ id }) {
               <MaterialCommunityIcons name="cog" color={color} size={size} />
             ),
           }}
-        />
+        /> */}
       </Tab.Navigator>
     </NavigationContainer>
     // </Provider>
